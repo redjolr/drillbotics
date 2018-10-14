@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% load staticfiles %}
+<title>{{sensor.name}}</title>
+
+<h1>{{sensor.name}}</h1>
+
+
+<table>
+  <tr>
+    <th>Abbreviation:</th>
+    <td>{{sensor.abbreviation}}</td>
+  </tr>
+  <tr>
+    <th>Description: </th>
+    <td>{{sensor.description}}</td>
+  </tr>
+  <tr>
+    <th>Unit of Measure: </th>
+    <td>{{sensor.unit_of_measure}}</td>
+  </tr>
+  <tr>
+    <th>Picture: </th>
+    <td>
+    {% if sensor.picture %}
+    <img src="{{sensor.picture.url}}"  alt="" >
+    {%else%}
+    <img src="{% static 'no_image_available.png' %}"  alt=""  >
+    {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <th>Type: </th>
+    <td>{{sensor.type}}</td>
+  </tr>
+  <tr>
+    <th>Time added: </th>
+    <td>{{sensor.added_time}}</td>
+  </tr>
+</table>
+
+
+{% endblock %}

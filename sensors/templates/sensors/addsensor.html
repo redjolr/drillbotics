@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<title>Add a sensor</title>
+
+
+
+
+
+
+<div class="container">
+  <h1>Add a sensor</h1>
+  <form method="POST" action="{% url 'addsensor' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="abbreviation">Abbreviation</label>
+        <input type="text" class="form-control" name="abbreviation" id="abbreviation" placeholder="Abbreviation"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputAddress">Description</label>
+      <textarea class="form-control" name="description" id="desciption" placeholder="Description" rows=8></textarea>
+    </div>
+    <div class="form-group">
+      <label for="unit_of_measure">Unit of measure</label>
+      <input type="text" class="form-control" name="unit_of_measure" id="unit_of_measure" placeholder="Unit of measure"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="inputCity">Picture</label>
+        <input type="file"  name="picture" class="form-control-file" id="picture"/>
+      </div>
+      <div class="form-group col-md-4">
+        <label>Type</label> <br>
+        <div class="form-check-inline ">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="physicalRadio" value="Physical">
+            <label class="form-check-label" for="physicalRadio"> Physical </label>
+          </div> &nbsp&nbsp&nbsp&nbsp&nbsp
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="virtualRadio" value="Virtual">
+            <label class="form-check-label" for="virtualRadio"> Virtual </label>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Add the sensor</button>
+  </form>
+
+</div>
+
+
+
+
+{% endblock %}
