@@ -5,25 +5,30 @@
 {% load staticfiles  %}
 <meta charset="utf8" >
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css'  %}"  rel ="stylesheet">
+<style>
 
-
+</style>
 </head>
 
 <body>
-<header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-bottom: 1px solid #E8E8E8'>
-    <a class="navbar-brand" href="#"><img src="{% static 'logo.png' %}" height=30 alt="UiS Drillbotics logo"> UiSDrill </a>
+<header id="header">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style='border-bottom: 1px solid #E8E8E8' id="navbar">
+    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'logo.png' %}" height=30 alt="UiS Drillbotics logo"> UiSDrill </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Experiments<span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="{% url 'sensors' %}">Sensors</a>
-        <a class="nav-item nav-link" href="#">Rocks</a>
+        <a class="nav-item nav-link {% block nav_item_experiments %} {% endblock nav_item_experiments %}" href="{% url 'experiments' %}">
+          Experiments
+        </a>
+        <a class="nav-item nav-link {% block nav_item_sensors %} {% endblock nav_item_sensors %} " href="{% url 'sensors' %}">Sensors</a>
+        <a class="nav-item nav-link {% block nav_item_rocks %} {% endblock nav_item_rocks %}" href="{% url 'rocks' %}">Rocks</a>
 
       </div>
     </div>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block nav_item_rocks %}active{%endblock nav_item_rocks%}
+
+
+{% block content %}
+<div class="container">
+<h1>Rocks</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Rock</th>
+      <th scope="col">Materials</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rock in rocks %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{rock.0}}</td>
+      <td>
+        {% for material in rock.1 %}
+           {% if forloop.last %}
+              {{material}}
+            {% else %}
+              {{material}},
+           {% endif %}
+        {% endfor %}
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+  </span>
+  </div>
+
+</div>
+
+{% endblock %}

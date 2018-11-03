@@ -2,7 +2,7 @@ from django.db import models
 
 class Sensor(models.Model):
     name = models.CharField(max_length=50)
-    abbreviation = models.CharField(max_length=10)
+    abbreviation = models.CharField(max_length=30)
     description = models.TextField()
     unit_of_measure = models.CharField(max_length=20)
     picture = models.ImageField(upload_to="media/",  null=True)

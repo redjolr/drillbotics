@@ -1,4 +1,18 @@
 from django.shortcuts import render
+from django.db.models import Count
+from experiments.models import Experiment,Measurement
+from sensors.models import Sensor
+
 
 def home(request):
-    return render(request, 'dashboard/home.html')
+    experiments_set = Experiment.objects.all().values()
+    sensors = Sensor.objects.all()
+    data_count_set =Measurement.objects.all().values('experiment_id').filter(sensor_id=1).annotate(total=Count('experiment_id'))    #Gets the count of data points for every experiment
+    data_count = {experiment['experiment_id']:experiment['total'] for experiment in data_count_set}
+
+    experiments = []
+    for exp in experiments_set:
+        exp['data_count'] = data_count[exp['id']]
+        experiments.append(exp)
+
+    return render(request, 'dashboard/home.html', {'experiments': experiments, 'sensors':sensors, 'data_count':data_count})

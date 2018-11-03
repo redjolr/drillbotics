@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% block nav_item_sensors %} active {% endblock nav_item_sensors %}
 
 
 {% block content %}
@@ -51,7 +51,7 @@
       <div class="col-md-9">
         <p>{{sensor.description_short}}...</p>
         <p>
-          <a class="btn btn-read-more" href="http://www.jquery2dotnet.com/2013/12/cool-share-button-effects-styles.html">Read more</a></p>
+          <a class="btn btn-read-more" href="{% url 'sensor' sensor.id %}">Read more</a></p>
         </div>
       </div>
     </div>

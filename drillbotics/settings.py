@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rocks.apps.RocksConfig',
+    'experiments.apps.ExperimentsConfig',
     'sensors.apps.SensorsConfig',
     'dashboard.apps.DashboardConfig',
     'django.contrib.admin',
@@ -125,6 +127,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'drillbotics/static'),
+    os.path.join(BASE_DIR, 'dashboard/static')
 ]
 
 STATIC_URL = '/static/'

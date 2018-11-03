@@ -1,0 +1,33 @@
+html, body{height: 100%}
+#header {position: absolute; width: 100%; z-index:1}
+#pane_container {height: 100%; display: flex; background-color: #DCDCDC}
+
+#left_pane {  margin-right: 4px;}
+
+#accordion { overflow-y: scroll; height: 100%}
+.pane {height: 100%; padding: 20px 5px 20px 5px;}
+.tab_pane {height: 100%; border: 1px solid green}
+/* .chart_area{float: left; width:75%; }
+.info_area {float: right; width: 25%;  } */
+
+
+.experiment_div{overflow: hidden;  width: 100%;   }
+.list-group-item-action{border-left: 0px; border-right: 0px;}
+.card-header:hover{cursor: pointer}
+
+.ui-slider-handle {
+  width: 3em;
+  height: 1.6em;
+  top: 50%;
+  margin-top: -.8em;
+  text-align: center;
+  line-height: 1.6em;
+}
+
+.slider{width: 90%;}
+
+::-webkit-scrollbar {  width: 2px;}
+
+::-webkit-scrollbar-track {    background: #f1f1f1;}
+
+::-webkit-scrollbar-thumb {background: #888;}
