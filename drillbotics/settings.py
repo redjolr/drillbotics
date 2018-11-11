@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig',
     'rocks.apps.RocksConfig',
     'experiments.apps.ExperimentsConfig',
     'sensors.apps.SensorsConfig',
@@ -120,6 +121,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 from experiments.models import Experiment,Measurement
 from sensors.models import Sensor
 
-
+@login_required(login_url='/login/')
 def home(request):
     experiments_set = Experiment.objects.all().values()
     sensors = Sensor.objects.all()

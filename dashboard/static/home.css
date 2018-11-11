@@ -5,15 +5,28 @@ html, body{height: 100%}
 #left_pane {  margin-right: 4px;}
 
 #accordion { overflow-y: scroll; height: 100%}
-.pane {height: 100%; padding: 20px 5px 20px 5px;}
+.pane {height: 100%; padding: 20px 5px 20px 5px; position: relative;}
 .tab_pane {height: 100%; border: 1px solid green}
 /* .chart_area{float: left; width:75%; }
 .info_area {float: right; width: 25%;  } */
 
 
 .experiment_div{overflow: hidden;  width: 100%;   }
+.dropdown-item.sensor {position: relative; padding: 0; margin: 0; width: 200px; height: 30px; }
+
+.sensors-dropdown-button {background: white !important; color: black !important}
+.sensors-dropdown-button:hover {color: gray !important}
+
+.checkBoxWrapper{ display: inline; height: 100%;  position: absolute; right:0; width: 10%; vertical-align: middle;}
+.sensorCheckBox{ vertical-align: middle; line-height: 30px }
+
+.sensorLabelWrapper { display: inline; height: 100%;  position: absolute; left:10px; width: 90%; vertical-align: middle;}
+.sensorLabel { vertical-align: middle; line-height: 30px;   width: 100% }
+
 .list-group-item-action{border-left: 0px; border-right: 0px;}
 .card-header:hover{cursor: pointer}
+
+.visualize_btn, .download_btn {width: 85%}
 
 .ui-slider-handle {
   width: 3em;
@@ -23,6 +36,10 @@ html, body{height: 100%}
   text-align: center;
   line-height: 1.6em;
 }
+
+.nav-item {padding-right: 7px}
+.oi-circle-x {font-size: 12px}
+.oi-circle-x:hover {color: gray; }
 
 .slider{width: 90%;}
 

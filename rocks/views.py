@@ -1,7 +1,10 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import Rock
 from .models import RockComposition
 from .models import Material
+
+@login_required(login_url='/login/')
 def allrocks(request):
     rock_compositions = RockComposition.objects.select_related('rock', 'material').values('rock__name', 'material__name')
     rocks = {}
