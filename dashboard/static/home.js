@@ -105,17 +105,26 @@ function add_new_panel(dbId, experiment_date)
 
 function close_panel(dbId)
 {
+  var isActive = false;
   var htmlId = 'experiment'+dbId;
   var tabId = htmlId+'tab';
   var panelId = htmlId+'Content';
-  $('#'+tabId).remove();
+  if ($('#'+panelId).hasClass('show'))
+  {
+    isActive = true;
+  }
+
   $('#'+panelId).remove();
+  $('#'+tabId).remove();
+
+  if(isActive)
+    $('#nav-tab a:first').tab('show');
 }
 
 function generate_chart(dbId, data_object)
 {
   var htmlId = 'experiment'+dbId;
-  $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area').eq(0));
+  $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
   var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']
   var sensor_datasets = [];
 
