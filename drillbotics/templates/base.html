@@ -38,6 +38,7 @@
 
     <div class="nav navbar-nav navbar-right">
       <!-- <a href="#account" class="nav-item nav-link">Account</a> -->
+      <span class="nav-item nav-link" >Hello {{user.get_short_name}}</span> &nbsp;&nbsp;&nbsp;
       <a class="nav-item nav-link" href="javascript:{document.getElementById('logoutForm').submit()}">Logout</a>
       <form id='logoutForm' action="{% url 'logout' %}" method="POST">
         {% csrf_token %}
