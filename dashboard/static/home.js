@@ -57,7 +57,9 @@ function load_experiment_data(dbId, experiment_date)
           var data_object = JSON.parse(data)
 
 
-          generate_chart(dbId, data_object)
+          generate_chart(dbId, data_object);
+
+
           $('<p><strong>Data points:</strong> <span>'+data_object['data']['time'].length+'</span></p>'+
             '<p><h4>Rock</h4>'+
                 '<span><strong>Id:</strong> '+data_object['rock']['id']+'</span><br>'+
@@ -93,7 +95,8 @@ function add_new_panel(dbId, experiment_date)
                           '<div class="info_area col-md-3"> </div>'+
                         '</div>'+
                       '</div>'+
-                    '</div>'
+                    '</div>';
+
   $(tabContentHtml).appendTo("#nav-tabContent");
 
   $('#loading_gif').css('display', 'block')
@@ -123,6 +126,7 @@ function close_panel(dbId)
 
 function generate_chart(dbId, data_object)
 {
+
   var htmlId = 'experiment'+dbId;
   $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
   var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']

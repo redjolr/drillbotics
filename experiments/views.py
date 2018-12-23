@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db import connection
 from .models import Experiment, Measurement
 from sensors.models import Sensor
-
+import matplotlib.pyplot as plt
 import json
 
 @login_required(login_url='/login/')
@@ -55,6 +55,14 @@ def experiment_data(request, id):
         sensor_id = data[i*per_sensor_datalength]['sensor_id']
         sensor_name = data[i*per_sensor_datalength]['sensor_id__name']
         sensors_data.append({"sensor_name":sensor_name, "values": [measurement['value'] for measurement in data[i*per_sensor_datalength:i*per_sensor_datalength+per_sensor_datalength:downsample_step]] } )
+
+
+    #matplotlib
+    fig = plt.figure()
+    plt.plot([1,2,3,4])
+    plt.ylabel('some numbers')
+    fig.savefig('graph.png')
+    #matplotlib
 
 
     return HttpResponse(json.dumps({'rock': rock,'data':{'time': time_arr, 'sensors':sensors_data}}))
