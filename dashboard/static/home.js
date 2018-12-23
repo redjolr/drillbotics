@@ -2,7 +2,7 @@ var  experiments = {};
 
 $("#pane_container").css("padding-top", $("header").height());
 $("#pane_container").width($(window).width());
-$('#left_pane').width($("#pane_container").width()*0.15);
+$('#left_pane').width("230px");
 $('#right_pane').width($("#pane_container").width()-$("#left_pane").width());
 
 $( function() {
