@@ -1,0 +1,23 @@
+#upper_pane{width: 100%; }
+#details_div{padding-left: 10px}
+#sensor_image{width:100%}
+#sensor_name_div {font-size: 35px}
+.jumbotron {padding-top: 30px; padding-bottom: 30px; background-color: #f8f7f9; margin-top: 10px}
+
+.oi-pencil { line-height: 40px; font-size: 30px;}
+.oi-pencil:hover {color:#424bf4; cursor: pointer }
+
+.sensor_input {display: none;  width: 100%; padding: 0; margin: 0; border-width: 0px 0px 1px 0px;}
+.sensor_input:focus {outline: none}
+
+.form-check-inline{ padding: 0; margin: 0}
+.form-check {padding: 0; margin: 0}
+
+.picture_input {display: none}
+#upload_picture_label{  position: absolute;  bottom: 8px; right: 0px;  width: max-content; padding: 5px 10px 5px 10px; font-size: 18px;
+                        color: white; background-color: black;opacity: 0.6; border-radius: 3px;}
+#upload_picture_label:hover {cursor: pointer; opacity: 0.8}
+
+
+#description_label{font-size: 25px}
+.btn {float: right; margin-left: 20px; padding: 10px 15px 10px 15px; display: none}

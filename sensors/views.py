@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Sensor
 from django.templatetags.static import static
@@ -15,6 +15,7 @@ def allsensors(request):
 @login_required(login_url='/login/')
 def sensor(request, id):
     sensor = Sensor.objects.get(id=id)
+    sensor.type= str(sensor.type)
     return render(request, 'sensors/sensor.html', {'sensor':sensor} )
 
 @login_required(login_url='/login/')
@@ -29,11 +30,30 @@ def addsensor(request):
             #sensor.picture = request.FILES['picture']
             sensor.type = request.POST['type']
             if len(request.FILES)!=0:
-                sensor.picture = request.FILES['picture']
-
-                                                           #
+                sensor.picture = request.FILES['picture']                                       #
             sensor.save()
             return redirect('/sensors/'+str(sensor.id))
 
     if request.method=="GET":
+        return render(request, 'sensors/addsensor.html')
+
+
+@login_required(login_url='/login/')
+def update_sensor(request, id):
+
+    if request.method=="POST":
+        sensor = get_object_or_404(Sensor, id=id)
+        sensor.name = request.POST['name']
+        sensor.abbreviation = request.POST['abbreviation']
+        sensor.unit_of_measure = request.POST['unit_of_measure']
+        sensor.type = request.POST['type']
+        sensor.description = request.POST['description']
+        if len(request.FILES)!=0:
+            for key in request.FILES.keys():
+                print(key)
+            sensor.picture = request.FILES['picture']
+            print("YOOOOOO")
+        sensor.save()
+        return redirect('/sensors/'+str(sensor.id))
+    elif request.method=="GET":
         return render(request, 'sensors/addsensor.html')

@@ -93,7 +93,7 @@
                 </div>
               </div>
               <br>
-              <p class='btn btn-success visualize_btn'  onclick='load_experiment_data({{experiment.id}}, "{{experiment.start_time|date:"d M Y"}}")'>Visualize data >></p>
+              <p class='btn btn-success visualize_btn'  onclick='load_experiment({{experiment.id}}, "{{experiment.start_time|date:"d M Y"}}")'>Visualize data >></p>
 
               <a href="{% url 'download_dataset' experiment.id %}"><p  class='btn btn-light download_btn' >Download data <span class="oi oi-data-transfer-download"></span></p></a>
               <!-- <button>Download dataset</button> -->
@@ -149,6 +149,13 @@ for(var i=0; i<sliders.length; i++)
     });
   }(i) );
 }
+
+
+//Makes tabs drag-and-drop-able. You can move the tab position
+$( function() {
+  $( "#nav-tab" ).sortable();
+  $( "#nav-tab" ).disableSelection();
+} );
 
 $(".ui-slider-handle").css("width", "35px")
 $(".ui-slider-handle").css("height", "24px")

@@ -5,6 +5,7 @@ $("#pane_container").width($(window).width());
 $('#left_pane').width("230px");
 $('#right_pane').width($("#pane_container").width()-$("#left_pane").width());
 
+//Makes left pane resizable. jQuery UI funcitonality
 $( function() {
 $( "#left_pane" ).resizable({
   handles: "e",
@@ -15,29 +16,28 @@ $( "#left_pane" ).resizable({
 });
 } );
 
-function load_experiment_data(dbId, experiment_date)
+function load_experiment(experiment_id, experiment_date)
 {
-    var elem = $("#experiment"+dbId);
+    var elem = $("#experiment"+experiment_id);
 
-    var htmlId = 'experiment'+dbId;
+    var htmlId = 'experiment'+experiment_id;
     if($("#"+htmlId+"tab").length>0){ //The experiment is already loaded
         experiment_already_loaded(htmlId);
         return;
     }
 
-    if($(".checkbox_exp"+dbId+":checkbox:checked").length==0)
+    if($(".checkbox_exp"+experiment_id+":checkbox:checked").length==0)
     {
       alert("Choose at least one sensor to visualize!");
       return;
     }
 
-    var sensor_id = $("#sensor_select"+dbId).val()
-    var downsample_val = $("#slider"+dbId).slider("value")*0.01
-    var total_points = $('#total_points'+dbId).html()
+    var sensor_id = $("#sensor_select"+experiment_id).val()
+    var downsample_val = $("#slider"+experiment_id).slider("value")*0.01
+    var total_points = $('#total_points'+experiment_id).html()
 
 
-
-    var checked_sensors = get_checked_sensors(dbId);
+    var checked_sensors = get_checked_sensors(experiment_id);
     var checked_sensors_url = "&sensors=";
 
     for(i=0; i<checked_sensors.length; i++)
@@ -47,19 +47,15 @@ function load_experiment_data(dbId, experiment_date)
         checked_sensors_url+="_";
     }
 
-    url = "/experiments/"+dbId+"?downsample="+downsample_val+"&total_points="+total_points+checked_sensors_url;
-    add_new_panel(dbId, experiment_date);
+    url = "/experiments/"+experiment_id+"?downsample="+downsample_val+"&total_points="+total_points+checked_sensors_url;
+    add_new_panel(experiment_id, experiment_date);
 
 
 
     $.get(url, function(data, status){
 
           var data_object = JSON.parse(data)
-
-
-          generate_chart(dbId, data_object);
-
-
+          generate_chart(experiment_id, data_object);
           $('<p><strong>Data points:</strong> <span>'+data_object['data']['time'].length+'</span></p>'+
             '<p><h4>Rock</h4>'+
                 '<span><strong>Id:</strong> '+data_object['rock']['id']+'</span><br>'+
@@ -69,23 +65,17 @@ function load_experiment_data(dbId, experiment_date)
 
       });
 
-
-
-
-
-
-
 }
 
 
-function add_new_panel(dbId, experiment_date)
+function add_new_panel(experiment_id, experiment_date)
 {
-  var htmlId = 'experiment'+dbId;
+  var htmlId = 'experiment'+experiment_id;
   navTab = $("#nav-tab");
   navTabContent = $("#nav-tabContent");
-  navTabHtml= '<a class="nav-item nav-link " id="'+htmlId+'tab" data-toggle="tab" href="#'+htmlId+'Content"'+
+  navTabHtml= '<a class="nav-item nav-link ui-state-default" id="'+htmlId+'tab" data-toggle="tab" href="#'+htmlId+'Content"'+
               ' role="tab" aria-controls="'+htmlId+'Content" aria-selected="true"   ><span>'+experiment_date+
-              '</span>&nbsp;&nbsp; <span  class="oi oi-circle-x" onclick="close_panel('+dbId+')"></span></a>'
+              '</span>&nbsp;&nbsp; <span  class="oi oi-circle-x" onclick="close_panel('+experiment_id+')"></span></a>'
   $(navTabHtml).appendTo('#nav-tab');
 
   tabContentHtml = '<div  class="tab-pane fade" id="'+htmlId+'Content" style="position: relative" role="tabpanel" aria-labelledby="'+htmlId+'tab">'+
@@ -106,14 +96,13 @@ function add_new_panel(dbId, experiment_date)
 
 }
 
-function close_panel(dbId)
+function close_panel(experiment_id)
 {
   var isActive = false;
-  var htmlId = 'experiment'+dbId;
+  var htmlId = 'experiment'+experiment_id;
   var tabId = htmlId+'tab';
   var panelId = htmlId+'Content';
-  if ($('#'+panelId).hasClass('show'))
-  {
+  if ($('#'+panelId).hasClass('show')){ //Check if the tab being closed is the active one: has class 'show'
     isActive = true;
   }
 
@@ -124,16 +113,13 @@ function close_panel(dbId)
     $('#nav-tab a:first').tab('show');
 }
 
-function generate_chart(dbId, data_object)
+function generate_chart(experiment_id, data_object)
 {
 
-  var htmlId = 'experiment'+dbId;
-  $("<img src='/media/graphs/"+data_object['filename']+".png' id='myChart"+dbId+"' style='width:100%; height: 100%;' />").appendTo($('#'+htmlId+'Content .chart_area'));
+  var htmlId = 'experiment'+experiment_id;
+  $("<img src='/media/graphs/"+data_object['filename']+".png' id='myChart"+experiment_id+"' style='width:100%; height: 100%;' />").appendTo($('#'+htmlId+'Content .chart_area'));
 
-
-
-
-  // $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
+  // $('<canvas id="myChart'+experiment_id+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
   // var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']
   // var sensor_datasets = [];
   //
@@ -150,7 +136,7 @@ function generate_chart(dbId, data_object)
   //   });
   //
   // }
-  // var ctx = document.getElementById('myChart'+dbId)//.getContext('2d');
+  // var ctx = document.getElementById('myChart'+experiment_id)//.getContext('2d');
   // var myChart = new Chart(ctx, {
   //     type: 'line',
   //     data: {
@@ -178,11 +164,11 @@ function generate_chart(dbId, data_object)
   //     }
   // });
   //
-  // $('#myChart'+dbId).width($('.chart_area').width()+"px")
-  // $('#myChart'+dbId).height( $('#right_pane').height()*0.9 )
+  // $('#myChart'+experiment_id).width($('.chart_area').width()+"px")
+  // $('#myChart'+experiment_id).height( $('#right_pane').height()*0.9 )
   //
-  // $('#myChart'+dbId).attr('width', $('.chart_area').width()+"px")
-  // $('#myChart'+dbId).attr('height', $('#right_pane').height()*0.9+"px" )
+  // $('#myChart'+experiment_id).attr('width', $('.chart_area').width()+"px")
+  // $('#myChart'+experiment_id).attr('height', $('#right_pane').height()*0.9+"px" )
 
 }
 
@@ -199,6 +185,7 @@ function get_checked_sensors(experiment_id)
   return checked_sensors;
 }
 
+//When the user tries to load an experiment that is already loaded, this function is executed
 function experiment_already_loaded(htmlId)
 {
     alert("Experiment already in panel!")
@@ -223,7 +210,6 @@ function select_checkbox(checkbox, experiment_id)
       $('.checkbox_exp'+experiment_id).prop('checked', false);
     }
   }
-
   else{
     if($(".checkbox_exp"+experiment_id+":checked").length==0){
       $("#selectall_exp"+experiment_id).prop("indeterminate", false);
@@ -232,13 +218,8 @@ function select_checkbox(checkbox, experiment_id)
     else if ($(".checkbox_exp"+experiment_id+":checked").length == $(".checkbox_exp"+experiment_id).length){
       $("#selectall_exp"+experiment_id).prop("indeterminate", false);
       $("#selectall_exp"+experiment_id).prop("checked", true);
-
     }
     else if($(".checkbox_exp"+experiment_id+":checked").length < $(".checkbox_exp"+experiment_id).length)
       $("#selectall_exp"+experiment_id).prop("indeterminate", true);
-
   }
-
-
-
 }

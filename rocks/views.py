@@ -15,4 +15,16 @@ def allrocks(request):
         rocks[rock_comp['rock__name']].append(rock_comp['material__name'])
     rocks = list(rocks.items())
     print(rocks)
-    return render(request, 'rocks/allrocks.html', {'rocks':rocks})
+    return render(request, 'rocks/allrocks_list.html', {'rocks':rocks})
+
+@login_required(login_url='/login/')
+def rock(request, id):
+    pass
+
+@login_required(login_url='/login/')
+def addrock(request):
+    pass
+
+@login_required(login_url='/login/')
+def update_rock(request, id):
+    pass

@@ -4,43 +4,104 @@
 
 {% block content %}
 {% load staticfiles %}
+
 <title>{{sensor.name}}</title>
+<link rel="stylesheet" href="{% static 'sensor.css' %}">
 
-<h1>{{sensor.name}}</h1>
+<br><br>
+<div class='container'>
 
 
-<table>
-  <tr>
-    <th>Abbreviation:</th>
-    <td>{{sensor.abbreviation}}</td>
-  </tr>
-  <tr>
-    <th>Description: </th>
-    <td>{{sensor.description}}</td>
-  </tr>
-  <tr>
-    <th>Unit of Measure: </th>
-    <td>{{sensor.unit_of_measure}}</td>
-  </tr>
-  <tr>
-    <th>Picture: </th>
-    <td>
-    {% if sensor.picture %}
-    <img src="{{sensor.picture.url}}"  alt="" >
-    {%else%}
-    <img src="{% static 'no_image_available.png' %}"  alt=""  >
-    {% endif %}
-    </td>
-  </tr>
-  <tr>
-    <th>Type: </th>
-    <td>{{sensor.type}}</td>
-  </tr>
-  <tr>
-    <th>Time added: </th>
-    <td>{{sensor.added_time}}</td>
-  </tr>
-</table>
+<form action="{% url 'update_sensor' sensor.id %}" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="row" id="sensor_name_div" >
+    <div class='col-md-3 col-lg-3 col-xl-3 '><b id="sensor_name" class="sensor_data">{{sensor.name}}</b>
+      <input type="text" class="sensor_input" name="name" value="{{sensor.name}}">
+    </div>
+    <div class='col-md-1 col-lg-1 col-xl-1'>
+      <span class="oi oi-pencil" data-toggle="tooltip" title="Edit sensor" data-placement="right" onclick="edit_sensor_data()"></span>
+    </div>
+  </div>
 
+
+  <div id='upper_pane'  class='row'>
+    <div id='image_div' class='col-md-4 col-lg-4 col-xl-4'>
+      {% if sensor.picture %}
+      <img src="{{sensor.picture.url}}"  alt="" id='sensor_image' >
+      {%else%}
+      <img src="{% static 'no_image_available.png' %}"  alt=""  id='sensor_image'  >
+      {% endif %}
+      <label for="picture_input" class=" sensor_input" id="upload_picture_label">
+          Upload file
+      </label>
+      <input  type="file" name="picture" class="form-control-file  picture_input" id="picture_input" />
+    </div>
+
+    <div id='details_div' class='col-md-6 col-lg-6 col-xl-6  list-group list-group-flush'>
+      <div class="list-group-item">
+        <div class="container">
+          <div class="row">
+            <div class='col-md-5 col-lg-5 col-xl-5'><b>Abbreviation:</b></div> <div class='sensor_data col-md-7 col-lg-7 col-xl-7' >{{sensor.abbreviation}}</div>
+            <input type="text" class="sensor_input col-md-7 col-lg-7 col-xl-7" name="abbreviation" value="{{sensor.abbreviation}}">
+          </div>
+        </div>
+      </div>
+      
+      <div class="list-group-item">
+        <div class="container">
+          <div class="row">
+            <b class='col-md-5 col-lg-5 col-xl-5'>Unit of Measure: </b><span class='sensor_data col-md-7 col-lg-7 col-xl-7'>{{sensor.unit_of_measure}}</span>
+            <input type="text" class="sensor_input col-md-7 col-lg-7 col-xl-7" name="unit_of_measure" value="{{sensor.unit_of_measure}}">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="list-group-item">
+        <div class="container">
+          <div class="row">
+              <b class='col-md-5 col-lg-5 col-xl-5' >Type: </b> <span class='sensor_data col-md-7 col-lg-7 col-xl-7'>{{sensor.type}}</span>
+
+              <div class="sensor_input  col-md-7 col-lg-7 col-xl-7" >
+                <div class="form-check-inline">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="type" id="physicalRadio" value="Physical" checked>
+                    <label class="form-check-label" for="physicalRadio">Physical</label>
+                  </div>&nbsp; &nbsp; &nbsp; &nbsp;
+                  <div class="form-check">
+                    {% if sensor.type == "Virtual" %}
+                      <input class="form-check-input" type="radio" name="type" id="virtualRadio" value="Virtual" checked>
+                    {% else %}
+                      <input class="form-check-input" type="radio" name="type" id="virtualRadio" value="Virtual">
+                    {% endif %}
+                    <label class="form-check-label" for="virtualRadio">Virtual</label>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div id='bottom_pane'>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-5" id="description_label">Description</h1>
+        <p class="lead sensor_data" id="sensor_description">{{sensor.description}}</p>
+        <textarea class="lead sensor_input" name="description" rows="7">{{sensor.description}}</textarea>
+
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
+  <button type="button" class="btn btn-secondary" id="cancel_btn" onclick="edit_sensor_data()">Cancel</button>
+</form>
+
+
+<br><br><br>
+</div>
+<script type="text/javascript" src="{% static 'sensor.js' %}" ></script>
 
 {% endblock %}

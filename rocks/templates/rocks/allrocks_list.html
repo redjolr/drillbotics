@@ -1,10 +1,9 @@
-{% extends 'base.html' %}
-{% block nav_item_rocks %}active{%endblock nav_item_rocks%}
+{% extends 'allrocks.html' %}
 
 
-{% block content %}
-<div class="container">
-<h1>Rocks</h1>
+{% load staticfiles %}
+{% block rocks_content %}
+
 
 <table class="table">
   <thead>
@@ -36,6 +35,5 @@
 
 
 
-</div>
 
 {% endblock %}
