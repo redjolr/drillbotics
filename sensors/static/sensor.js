@@ -25,6 +25,5 @@ $(function() {
    $("#picture_input").change(function (){
      var fileName = $(this).val().split('\\').pop();
      $("#upload_picture_label").text(fileName + " selected");
-     alert(fileName);
    });
 });
