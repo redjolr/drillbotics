@@ -73,12 +73,20 @@
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu{{experiment.id}}">
+                  <div  class="dropdown-item sensor" style='border-bottom: 1px solid #eaeaea'>
+                    <div class='sensorLabelWrapper'><label class='sensorLabel' for='selectall_exp{{experiment.id}}' >Select all</label></div>
+                    <div class='checkBoxWrapper'>
+                      <input class='selectAllCheckBox' experiment='{{experiment.id}}' type="checkbox"
+                      id='selectall_exp{{experiment.id}}' onclick='select_checkbox(this, {{experiment.id}})' />
+                    </div>
+                  </div>
 
                   {% for sensor in sensors.all %}
                      <div  class="dropdown-item sensor">
                        <div class='sensorLabelWrapper'><label class='sensorLabel' for='sensor{{sensor.id}}_exp{{experiment.id}}' >{{sensor.name}}</label></div>
                        <div class='checkBoxWrapper'>
-                         <input class='sensorCheckBox checkbox_exp{{experiment.id}}' experiment='{{experiment.id}}' type="checkbox" id='sensor{{sensor.id}}_exp{{experiment.id}}' value="{{sensor.id}}"/>
+                         <input class='sensorCheckBox checkbox_exp{{experiment.id}}' experiment='{{experiment.id}}' type="checkbox" id='sensor{{sensor.id}}_exp{{experiment.id}}'
+                         value="{{sensor.id}}"  onclick='select_checkbox(this, {{experiment.id}})'/>
                        </div>
                      </div>
                   {% endfor %}

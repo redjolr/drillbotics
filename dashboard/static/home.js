@@ -128,56 +128,61 @@ function generate_chart(dbId, data_object)
 {
 
   var htmlId = 'experiment'+dbId;
-  $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
-  var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']
-  var sensor_datasets = [];
+  $("<img src='/media/graphs/"+data_object['filename']+".png' id='myChart"+dbId+"' style='width:100%; height: 100%;' />").appendTo($('#'+htmlId+'Content .chart_area'));
 
-  for(var i=0; i<data_object['data']['sensors'].length; i++)
-  {
-    sensor_datasets.push({
-      label: data_object['data']['sensors'][i]['sensor_name'],
-      data: data_object['data']['sensors'][i]['values'],
 
-      fill: false,
-      borderColor: [colors[i]],
-      borderWidth: 1,
-      backgroundColor: [colors[i]]
-    });
 
-  }
-  var ctx = document.getElementById('myChart'+dbId)//.getContext('2d');
-  var myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: data_object['data']["time"],
-          datasets: sensor_datasets
-      },
-      options: {
-          responsive: true,
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }],
 
-              xAxes: [{
-                ticks: {
-                    suggestedMax: 700,
-                    suggestedMin: 0,
-                    stepSize: 20
-                }
-            }]
-          },
-
-      }
-  });
-
-  $('#myChart'+dbId).width($('.chart_area').width()+"px")
-  $('#myChart'+dbId).height( $('#right_pane').height()*0.9 )
-
-  $('#myChart'+dbId).attr('width', $('.chart_area').width()+"px")
-  $('#myChart'+dbId).attr('height', $('#right_pane').height()*0.9+"px" )
+  // $('<canvas id="myChart'+dbId+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
+  // var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']
+  // var sensor_datasets = [];
+  //
+  // for(var i=0; i<data_object['data']['sensors'].length; i++)
+  // {
+  //   sensor_datasets.push({
+  //     label: data_object['data']['sensors'][i]['sensor_name'],
+  //     data: data_object['data']['sensors'][i]['values'],
+  //
+  //     fill: false,
+  //     borderColor: [colors[i]],
+  //     borderWidth: 1,
+  //     backgroundColor: [colors[i]]
+  //   });
+  //
+  // }
+  // var ctx = document.getElementById('myChart'+dbId)//.getContext('2d');
+  // var myChart = new Chart(ctx, {
+  //     type: 'line',
+  //     data: {
+  //         labels: data_object['data']["time"],
+  //         datasets: sensor_datasets
+  //     },
+  //     options: {
+  //         responsive: true,
+  //         scales: {
+  //             yAxes: [{
+  //                 ticks: {
+  //                     beginAtZero:true
+  //                 }
+  //             }],
+  //
+  //             xAxes: [{
+  //               ticks: {
+  //                   suggestedMax: 700,
+  //                   suggestedMin: 0,
+  //                   stepSize: 20
+  //               }
+  //           }]
+  //         },
+  //
+  //     }
+  // });
+  //
+  // $('#myChart'+dbId).width($('.chart_area').width()+"px")
+  // $('#myChart'+dbId).height( $('#right_pane').height()*0.9 )
+  //
+  // $('#myChart'+dbId).attr('width', $('.chart_area').width()+"px")
+  // $('#myChart'+dbId).attr('height', $('#right_pane').height()*0.9+"px" )
 
 }
 
@@ -205,4 +210,35 @@ function experiment_already_loaded(htmlId)
     $('#'+htmlId+'tab' ).animate({
       backgroundColor: "white"
     }, 1500);
+}
+
+
+function select_checkbox(checkbox, experiment_id)
+{
+  if( $(checkbox).hasClass('selectAllCheckBox')){
+    if($(checkbox).is(":checked")){
+      $('.checkbox_exp'+experiment_id).prop('checked', true);
+    }
+    else {
+      $('.checkbox_exp'+experiment_id).prop('checked', false);
+    }
+  }
+
+  else{
+    if($(".checkbox_exp"+experiment_id+":checked").length==0){
+      $("#selectall_exp"+experiment_id).prop("indeterminate", false);
+      $("#selectall_exp"+experiment_id).prop("checked", false);
+    }
+    else if ($(".checkbox_exp"+experiment_id+":checked").length == $(".checkbox_exp"+experiment_id).length){
+      $("#selectall_exp"+experiment_id).prop("indeterminate", false);
+      $("#selectall_exp"+experiment_id).prop("checked", true);
+
+    }
+    else if($(".checkbox_exp"+experiment_id+":checked").length < $(".checkbox_exp"+experiment_id).length)
+      $("#selectall_exp"+experiment_id).prop("indeterminate", true);
+
+  }
+
+
+
 }

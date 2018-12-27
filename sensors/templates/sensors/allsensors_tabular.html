@@ -1,0 +1,38 @@
+{% extends 'allsensors.html' %}
+
+
+{% load staticfiles %}
+{% block sensors_content %}
+
+<script src='http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' type='text/javascript'></script>
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<br>
+<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Sensor</th>
+                <th>Type</th>
+                <th>Unit of measure</th>
+                <th>Abbreviation</th>
+                <th>Added on</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sensor in sensors.all %}
+                <tr>
+                  <td>{{sensor.name}}</td>
+                  <td>{{sensor.type}}</td>
+                  <td>{{sensor.unit_of_measure}}</td>
+                  <td>{{sensor.abbreviation}}</td>
+                  <td>{{sensor.added_time_pretty}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+<script>
+  $(document).ready(function() {
+      $('#example').DataTable();
+  } );
+</script>
+{% endblock %}

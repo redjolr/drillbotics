@@ -1,0 +1,53 @@
+{% extends 'allsensors.html' %}
+
+
+{% load staticfiles %}
+{% block sensors_content %}
+
+  {% for sensor in sensors.all %}
+
+  <div class="row sensor_row">
+  <div class="col-md-12 post">
+    <div class="row">
+      <div class="col-md-12">
+
+          <h4>
+            <strong><a href="{% url 'sensor' sensor.id %}">{{sensor.name}}</a></strong>
+          </h4>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 post-header-line">
+        <span class="glyphicon glyphicon-user"></span>Unit of measure: <a href="#">{{sensor.unit_of_measure}}</a> |
+        <span class="glyphicon glyphicon-user"></span>Type: <a href="#">{{sensor.type}}</a> |
+        <span class="glyphicon glyphicon-user"></span>Added on: <a href="#">{{sensor.added_time_pretty}}</a> |
+        <span class="glyphicon glyphicon-user"></span>Abbreviation: <a href="#">{{sensor.abbreviation}}</a>
+
+      </div>
+    </div>
+    <div class="row post-content">
+      <div class="col-md-3" >
+        <a href="#">
+          {% if sensor.picture %}
+          <img src="{{sensor.picture.url}}"  alt="" style="width: 100%; " >
+          {% else %}
+          <img src="{% static 'no_image_available.png' %}"  alt="" style="width: 100%; " >
+          {% endif %}
+        </a>
+      </div>
+      <div class="col-md-9">
+        <p>{{sensor.description_short}}...</p>
+        <p>
+          <a class="btn btn-read-more" href="{% url 'sensor' sensor.id %}">Read more</a></p>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  {% endfor %}
+
+
+
+
+{% endblock %}

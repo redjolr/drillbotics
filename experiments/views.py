@@ -4,7 +4,13 @@ from django.http import HttpResponse
 from django.db import connection
 from .models import Experiment, Measurement
 from sensors.models import Sensor
+
+
+import matplotlib
 import matplotlib.pyplot as plt
+import uuid
+
+
 import json
 
 @login_required(login_url='/login/')
@@ -30,6 +36,9 @@ def allexperiments(request):
     ''')
     return render(request, 'experiments/allexperiments.html', {'experiments':experiments})
 
+def create_random_walk():
+    x = np.random.choice([-1,1],size=100, replace=True) # Sample with replacement from (-1, 1)
+    return np.cumsum(x) # Return the cumulative sum of the elements
 @login_required(login_url='/login/')
 def experiment_data(request, id):
     downsample_val = float(request.GET['downsample'])   #ranges from 0 to 1
@@ -59,13 +68,20 @@ def experiment_data(request, id):
 
     #matplotlib
     fig = plt.figure()
-    plt.plot([1,2,3,4])
-    plt.ylabel('some numbers')
-    fig.savefig('graph.png')
+    ax = plt.subplot(111)
+
+    for sensor in sensors_data:
+        ax.plot(time_arr, sensor['values'], label=sensor['sensor_name'])
+    plt.title('Legend inside')
+    ax.legend()
+    filename = str(uuid.uuid4())
+    fig.set_size_inches(12, 7)
+    ax.legend(loc='upper center', fontsize='small', ncol=6)
+    fig.savefig('media/graphs/{}.png'.format(filename), dpi=100, bbox_inches='tight')
     #matplotlib
 
 
-    return HttpResponse(json.dumps({'rock': rock,'data':{'time': time_arr, 'sensors':sensors_data}}))
+    return HttpResponse(json.dumps({'rock': rock,'data':{'time': time_arr, 'sensors':sensors_data}, 'filename':filename}))
 
 @login_required(login_url='/login/')
 def download_dataset(request, experiment_id):

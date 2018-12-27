@@ -5,8 +5,12 @@ from django.templatetags.static import static
 
 @login_required(login_url='/login/')
 def allsensors(request):
+
     sensors = Sensor.objects.all()
-    return render(request, 'sensors/allsensors.html', {'sensors':sensors})
+    if 'view' not in request.GET.keys() or request.GET['view']=='list' :
+        return render(request, 'sensors/allsensors_list.html', {'sensors':sensors})
+    elif request.GET['view']=='tabular':
+        return render(request, 'sensors/allsensors_tabular.html', {'sensors':sensors})
 
 @login_required(login_url='/login/')
 def sensor(request, id):
