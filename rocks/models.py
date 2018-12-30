@@ -24,8 +24,8 @@ class Rock(models.Model):
     class Meta:
         db_table='rock'
 
-    def description_short(self):
-        return self.description[:300]
+    # def description_short(self):
+    #     return self.description[:300]
 
 class RockComposition(models.Model):
     rock = models.ForeignKey(Rock, db_column='rock_id', on_delete=models.CASCADE)
