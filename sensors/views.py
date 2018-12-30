@@ -20,7 +20,7 @@ def sensor(request, id):
 
 @login_required(login_url='/login/')
 def addsensor(request):
-    if request.method=="POST":
+    if request.method=="POST": #when a new sensor is added
         if request.POST['name'] and request.POST['abbreviation'] and request.POST['description'] and request.POST['unit_of_measure']  and request.POST['type']:
             sensor = Sensor()
             sensor.name = request.POST['name']

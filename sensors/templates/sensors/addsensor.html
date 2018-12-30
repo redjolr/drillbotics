@@ -6,12 +6,10 @@
 <title>Add a sensor</title>
 
 
-
-
-
-
+<br>
 <div class="container">
   <h1>Add a sensor</h1>
+  <br>
   <form method="POST" action="{% url 'addsensor' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-row">
@@ -26,7 +24,7 @@
     </div>
     <div class="form-group">
       <label for="inputAddress">Description</label>
-      <textarea class="form-control" name="description" id="desciption" placeholder="Description" rows=8></textarea>
+      <textarea class="form-control" name="description" id="description" placeholder="Description" rows=8></textarea>
     </div>
     <div class="form-group">
       <label for="unit_of_measure">Unit of measure</label>

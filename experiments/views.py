@@ -39,6 +39,7 @@ def allexperiments(request):
 def create_random_walk():
     x = np.random.choice([-1,1],size=100, replace=True) # Sample with replacement from (-1, 1)
     return np.cumsum(x) # Return the cumulative sum of the elements
+    
 @login_required(login_url='/login/')
 def experiment_data(request, id):
     downsample_val = float(request.GET['downsample'])   #ranges from 0 to 1

@@ -13,6 +13,10 @@ class Material(models.Model):
 
 class Rock(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(null=True)
+    picture = models.ImageField(upload_to="media/",  null=True)
+    added_time = models.DateTimeField(auto_now_add=True, null=True)
+
     materials = models.ManyToManyField(Material, through='RockComposition')
 
     def __str__(self):
