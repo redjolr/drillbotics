@@ -4,36 +4,48 @@
 {% load staticfiles %}
 {% block rocks_content %}
 
-<br>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Rock</th>
-      <th scope="col">Materials</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for rock in rocks %}
-    <tr>
-      <th scope="row">{{forloop.counter}}</th>
-      <td>{{rock.0}}</td>
-      <td>
-        {% for material in rock.1 %}
-           {% if forloop.last %}
-              {{material}}
-            {% else %}
-              {{material}},
-           {% endif %}
-        {% endfor %}
-      </td>
+{% for rock in rocks.all %}
 
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="row sensor_row">
+<div class="col-md-12 post">
+  <div class="row">
+    <div class="col-md-12">
+
+        <h4>
+          <strong><a href="">{{rock.name}}</a></strong>
+        </h4>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 post-header-line">
+      <!-- <span class="glyphicon glyphicon-user"></span>Unit of measure: <a href="#">AAAA</a> | -->
+      <span class="glyphicon glyphicon-user"></span>Added on: <a href="#">{{rock.added_time}}</a>  |
+      <span class="glyphicon glyphicon-user"></span>Materials: <a href="#">{{materials|get_item:rock.id}}</a>
 
 
 
+    </div>
+  </div>
+  <div class="row post-content">
+    <div class="col-md-3" >
+      <a href="#">
+        {% if rock.picture %}
+        <img src="{{rock.picture.url}}"  alt="" style="width: 100%; " >
+        {% else %}
+        <img src="{% static 'no_image_available.png' %}"  alt="" style="width: 100%;" >
+        {% endif %}
+      </a>
+    </div>
+    <div class="col-md-9">
+      <p>{{rock.description_short}}...</p>
+      <p>
+        <a class="btn btn-read-more" href="">Read more</a></p>
+      </div>
+    </div>
+  </div>
+
+  </div>
+{% endfor %}
 
 {% endblock %}

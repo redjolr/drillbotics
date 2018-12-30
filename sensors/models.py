@@ -21,4 +21,4 @@ class Sensor(models.Model):
         return self.added_time.strftime("%d %B %Y")
 
     def description_short(self):
-        return self.description[:200]
+        return self.description[:300]

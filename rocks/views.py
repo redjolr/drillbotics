@@ -5,17 +5,36 @@ from .models import Rock
 from .models import RockComposition
 from .models import Material
 import json
+from operator import itemgetter
+from django.template.defaulttags import register
+
+
+
+
+@register.filter
+def get_item(dictionary, key):
+
+    if key in dictionary:
+        return dictionary[key]
+
 
 @login_required(login_url='/login/')
 def allrocks(request):
-    rock_compositions = RockComposition.objects.select_related('rock', 'material').values('rock__name', 'material__name')
-    rocks = {}
-    for rock_comp in rock_compositions:
-        if rock_comp['rock__name'] not in rocks:
-            rocks[rock_comp['rock__name']] = []
-        rocks[rock_comp['rock__name']].append(rock_comp['material__name'])
-    rocks = list(rocks.items())
-    return render(request, 'rocks/allrocks_list.html', {'rocks':rocks})
+    rocks =  Rock.objects.all()
+    materials = {}
+    for rock in rocks:
+        composition = list( map(itemgetter('material__name'), list(RockComposition.objects.select_related('material').values( 'material__name').filter(rock= rock)) ) )
+        materials[rock.id] =  ", ".join(composition)
+
+
+
+
+    if 'view' not in request.GET or request.GET['view']=='list':
+        return render(request, 'rocks/allrocks_list.html', {'rocks':rocks, 'materials':materials})
+    else:
+        return render(request, 'rocks/allrocks_tabular.html', {'rocks':rocks, 'materials':materials})
+
+
 
 def get_materials(request):
     materials = Material.objects.all()

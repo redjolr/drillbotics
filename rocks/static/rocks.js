@@ -15,8 +15,6 @@ $(function(){
        $('#imagePlaceHolder').css("display", "none")
      }
      reader.readAsDataURL(file);
-
-
    });
 });
 
@@ -38,7 +36,6 @@ function  choose_materials()
       "</div>").appendTo($('#selected_materials'));
   }
   get_all_materials()
-
 }
 
 function get_all_materials()
@@ -96,7 +93,6 @@ function remove_new_material(material)
   $(material).parent().remove();
 }
 
-
 function save_materials_to_db()
 {
   var url = "/rocks/materials/add";
@@ -104,7 +100,6 @@ function save_materials_to_db()
   if(materials.length==0){
     return;
   }
-
   material_names = []
   for(var i=0; i<materials.length; i++){
     material_names.push($(materials[i]).text())
@@ -143,8 +138,6 @@ function move_material(material)
     $("#materials_list").prepend($(material));
     selected_materials_register.splice(selected_materials_register.indexOf($(material).text()),1);
   }
-
-
 }
 
 function search_material(search_field)
@@ -183,23 +176,15 @@ function close_materials_window()
   $("#header").css("filter", "blur(0px)");
   $("#materials_container").css("display", "none");
   $("#submit_btn").removeAttr("disabled");
-
   var materials_input = $("#materials").val().split(",");
-
-
   selected_materials = $("#selected_materials").find(".materials_available")
   for(var i=selected_materials.length-1; i>=0; i--)
   {
-
     if( materials_input.indexOf($(selected_materials[i]).text())==-1  ) //-1 is returned when element is not in array
     {
       selected_materials_register.splice(selected_materials_register.indexOf($(selected_materials[i]).text()),1);
-
     }
   }
-
-
-
 }
 
 
@@ -211,6 +196,5 @@ function submit_form()
      materials_ids.push(selected_materials_register[i]['id'])
    }
    $("#hidden_materials").val(JSON.stringify(materials_ids));
-   alert( $("#hidden_materials").val())
    $("#rock_form").submit()
 }
