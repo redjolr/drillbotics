@@ -98,8 +98,16 @@ def update_rock(request, id):
             for key in request.FILES.keys():
                 print(key)
             rock.picture = request.FILES['picture']
-
         rock.save()
+        RockComposition.objects.filter(rock=rock).delete()
+        materials = json.loads(request.POST['materials'])
+        for material_id in materials:
+            rock_composition = RockComposition()
+            rock_composition.rock = rock
+            rock_composition.material = get_object_or_404(Material, id = material_id)
+            rock_composition.save()
+
+
         return redirect('/rocks/'+str(rock.id))
     # elif request.method=="GET":
     #     return render(request, 'sensors/addsensor.html')

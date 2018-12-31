@@ -4,6 +4,7 @@
 {% block content %}
 <title>Add a rock</title>
 <link rel="stylesheet" href="{% static 'rocks.css' %}">
+<link rel="stylesheet" href="{% static 'materials.css' %}">
 <br>
 <div class="container" id="form_container">
   <div class="row">
@@ -23,7 +24,7 @@
 
       <div class="form-group col-md-6 col-lg-6 col-xl-6">
         <label for="materials">Materials</label>
-        <input type="text" class="form-control" id="materials" onclick="choose_materials()"  placeholder="Click here to choose the materials" readonly/>
+        <input type="text" class="form-control" id="materials_textfield" onclick="open_materials_window()"  placeholder="Click here to choose the materials" readonly/>
         <input type="hidden" id='hidden_materials' name='materials' >
       </div>
 
@@ -105,7 +106,7 @@
       <div class="input-group mb-3" id="new_material_input_group">
         <input type="text" class="form-control" placeholder="Write the name of the new material" id="new_material_input"  aria-describedby="basic-addon2">
         <div class="input-group-append">
-          <button id="new_material_btn" class="btn btn-outline-secondary" type="button" onclick="add_new_material_btn()"> >> </button>
+          <button id="new_material_btn" class="btn btn-outline-secondary" type="button" onclick="add_new_material()"> >> </button>
         </div>
       </div>
     </div>
@@ -138,6 +139,5 @@
 
 </script>
 <script type="text/javascript"  src="{% static 'rocks.js' %}"></script>
-
-
+<script type="text/javascript"  src="{% static 'materials.js' %}"></script>
 {% endblock %}
