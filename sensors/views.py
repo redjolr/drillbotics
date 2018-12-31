@@ -52,7 +52,6 @@ def update_sensor(request, id):
             for key in request.FILES.keys():
                 print(key)
             sensor.picture = request.FILES['picture']
-            print("YOOOOOO")
         sensor.save()
         return redirect('/sensors/'+str(sensor.id))
     elif request.method=="GET":

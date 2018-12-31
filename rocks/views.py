@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Rock
@@ -58,14 +58,17 @@ def add_materials(request):
 
 @login_required(login_url='/login/')
 def rock(request, id):
-    pass
+    rock = Rock.objects.get(id=id)
+    composition = list( map(itemgetter('material__name'), list(RockComposition.objects.select_related('material').values( 'material__name').filter(rock= rock)) ) )
+    materials =  ", ".join(composition)
+
+    return render(request, 'rocks/rock.html', {'rock':rock, 'materials':materials} )
 
 
 
 
 @login_required(login_url='/login/')
 def addrock(request):
-
     if request.method=="GET":
         return render(request, 'rocks/addrock.html')
     elif request.method=="POST":
@@ -75,9 +78,6 @@ def addrock(request):
         if len(request.FILES)!=0:
             rock.picture = request.FILES['picture']
         rock.save()
-        print("ASASASDASD", rock.id)
-
-
         materials = json.loads(request.POST['materials'])
         for material_id in materials:
             material = Material.objects.get(pk=material_id)
@@ -88,9 +88,25 @@ def addrock(request):
 
         return redirect('/rocks')
 
-
-
-
 @login_required(login_url='/login/')
 def update_rock(request, id):
+    if request.method=="POST":
+        rock = get_object_or_404(Rock, id=id)
+        rock.name = request.POST['name']
+        rock.description = request.POST['description']
+        if len(request.FILES)!=0:
+            for key in request.FILES.keys():
+                print(key)
+            rock.picture = request.FILES['picture']
+
+        rock.save()
+        return redirect('/rocks/'+str(rock.id))
+    # elif request.method=="GET":
+    #     return render(request, 'sensors/addsensor.html')
+
+
+
+
+
+def lalala():
     pass

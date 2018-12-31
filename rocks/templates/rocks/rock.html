@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'rock.css' %}">
+<title>{{rock.name}}</title>
+<br><br>
+<div class="container">
+  <form action="{% url 'update_rock' rock.id %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row" id="rock_name_div" >
+      <div class='col-md-3 col-lg-3 col-xl-3 '><b id="rock_name" class="">{{rock.name}}</b>
+      </div>
+      <div class='col-md-1 col-lg-1 col-xl-1'>
+        <span class="oi oi-pencil" data-toggle="tooltip" title="Edit rock" data-placement="right" onclick="edit_rock_data()"></span>
+      </div>
+    </div>
+
+    <div id='upper_pane'  class='row'>
+      <div id='image_div' class='col-md-4 col-lg-4 col-xl-4'>
+        {% if rock.picture %}
+        <img src="{{rock.picture.url}}"  alt="" id='rock_image' >
+        {%else%}
+        <img src="{% static 'no_image_available.png' %}"  alt=""  id='rock_image'  >
+        {% endif %}
+        <label for="picture_input" class="rock_input" id="upload_picture_label">
+            Upload file
+        </label>
+        <input  type="file" name="picture" class="form-control-file  picture_input" id="picture_input" />
+      </div>
+
+      <div id='details_div' class='col-md-6 col-lg-6 col-xl-6  list-group list-group-flush'>
+        <div class="list-group-item">
+          <div class="container">
+            <div class="row">
+              <div class='col-md-5 col-lg-5 col-xl-5'><b>Name:</b></div> <div class='rock_data col-md-7 col-lg-7 col-xl-7' >{{rock.name}}</div>
+              <input type="text" class="rock_input col-md-7 col-lg-7 col-xl-7" name="name" value="{{rock.name}}">
+            </div>
+          </div>
+        </div>
+
+        <div class="list-group-item">
+          <div class="container">
+            <div class="row">
+              <b class='col-md-5 col-lg-5 col-xl-5'>Time added: </b><span class=' col-md-7 col-lg-7 col-xl-7'>{{rock.added_time}}</span>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="list-group-item">
+          <div class="container">
+            <div class="row">
+              <div class='col-md-5 col-lg-5 col-xl-5'><b>Materials:</b></div> <div class='/*rock_data*/ col-md-7 col-lg-7 col-xl-7' >{{materials}}</div>
+              <!-- <input type="text" class="rock_input col-md-7 col-lg-7 col-xl-7" name="materials" value="{{materials}}"> -->
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+
+    <div id='bottom_pane'>
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-5" id="description_label">Description</h1>
+          <p class="lead rock_data" id="rock_description">{{rock.description}}</p>
+          <textarea class="lead rock_input" name="description" rows="7">{{rock.description}}</textarea>
+
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
+    <button type="button" class="btn btn-secondary" id="cancel_btn" onclick="edit_rock_data()">Cancel</button>
+  </form>
+
+</div>
+<script type="text/javascript" src="{% static 'rock.js' %}" ></script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <table id="rocks_table" class="table" >
+  <thead>
+    <tr>
+      <th >#</th>
+      <th ">Rock</th>
+      <th>Materials</th>
+      <th>Added on</th>
+    </tr>
+  </thead>
+  <tbody>
+
+      <tr>
+        <th>{{forloop.counter}}</th>
+        <td>{{rock.name}}</td>
+        <td>  {{materials}} </td>
+        <td>{{rock.added_time}}</td>
+
+      </tr>
+
+  </tbody>
+</table> -->
