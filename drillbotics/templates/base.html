@@ -39,6 +39,17 @@
     <div class="nav navbar-nav navbar-right">
       <!-- <a href="#account" class="nav-item nav-link">Account</a> -->
       <span class="nav-item nav-link" >Hello {{user.get_short_name}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          User management
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Users</a>
+          <a class="dropdown-item" href="{% url 'allgroups' %}">Groups</a>
+        </div>
+      </li>
+
       <a class="nav-item nav-link " href="{% url 'sensors' %}">Account</a>
       <a class="nav-item nav-link" href="javascript:{document.getElementById('logoutForm').submit()}">Logout</a>
       <form id='logoutForm' action="{% url 'logout' %}" method="POST">

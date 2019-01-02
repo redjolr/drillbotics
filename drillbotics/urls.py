@@ -26,7 +26,9 @@ urlpatterns = [
     path('sensors/', include('sensors.urls')),
     path('experiments/', include('experiments.urls')),
     path('rocks/', include('rocks.urls')),
+    path('groups/', include('accounts.urls')),
     path('login/', accounts.views.login, name='login' ),
     path('logout/', accounts.views.logout, name='logout' ),
+
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

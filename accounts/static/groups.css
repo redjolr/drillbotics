@@ -1,0 +1,8 @@
+.table_row:hover {background-color: #f2f7ff; cursor: pointer}
+
+#selected_pemission_div, #available_pemission_div {width: 100%; height: 350px; border: 1px solid gray; overflow-y: scroll; margin-top:10px}
+.premissions_available:hover {background-color: #f2f7ff; cursor: pointer}
+.selected_pemission:hover  {background-color: #f2f7ff; cursor: pointer}
+#delete_message {font-size: 60px; color: green; position: fixed;top: 100px; right: 50%; transform: translate(50%,0);z-index: 2; opacity:0}
+.delete_icon:hover {color: red}
+#search_available_permission, #search_selected_permission {margin-left:20px}

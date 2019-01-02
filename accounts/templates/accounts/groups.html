@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% load staticfiles %}
+<script src='http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' type='text/javascript'></script>
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{% static 'groups.css' %}">
+<title>Groups</title>
+<br>
+<span class="oi oi-circle-check" id="delete_message" ></span>
+
+<div class="container">
+  <div class="row" style="margin: 20px 0px 20px 0px">
+    <div class="col-md-6 col-lg-6 col-xl-6"><h1>Groups  </h1></div>
+    <div class="col-md-6 col-lg-6 col-xl-6" >
+        <div style="position: absolute; top: 50%; right: 0%; transform: translate(0%,-50%);">
+          <a href="{% url 'addgroup' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a group"></span></a>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <table id="groups_table" >
+        <thead>
+          <tr>
+            <th >#</th>
+            <th>Name</th>
+            <th>Time added</th>
+            <th>Number of users</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for group in groups %}
+
+                <tr class="table_row" db_id="{{group.id}}" onclick="javascript:{window.location.replace('{% url 'group' group.id %}')}">
+                  <!-- <a href="{% url 'group' group.id %}"> -->
+                  <th>{{forloop.counter}}</th>
+                  <td>{{group.name}}</td>
+                  <td>{{group.added_time}}</td>
+                  <td>{{user_count|get_item:group}} </td>
+                  <td>{{group.description}}</td>
+                  <td><span  group_id="{{group.id}}" class="oi oi-trash delete_icon" onclick="delete_group(this)" data-toggle="tooltip" title="Delete group""></span></td>
+                  <!-- </a> -->
+                </tr>
+
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<script>
+  $(document).ready(function() {
+      $('#groups_table').DataTable();
+      $('[data-toggle="tooltip"]').tooltip();
+  } );
+
+$( ".delete_icon" ).click(function( event ) {
+  event.stopPropagation();
+  // Do something
+});
+
+function delete_group(delete_icon)
+{
+  group_id = $(delete_icon).attr('group_id');
+  url = '/groups/'+group_id+'/delete'
+  jQuery.ajax({
+    type: 'GET',
+    url: url,
+    data: { },
+    success: function(data) {
+      if(data=='deleted')
+        $(delete_icon).parent().parent().remove()
+      $('#delete_message' ).animate({
+        opacity: 1
+      }, 200);
+      $('#delete_message' ).animate({
+        opacity: 0
+      }, 2500);
+      $(".delete_icon").tooltip('dispose');
+    }
+  });
+}
+
+</script>
+
+
+
+{% endblock %}

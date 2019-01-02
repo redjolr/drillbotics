@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+{% load staticfiles %}
+
+<title>Group</title>
+<div class="container">
+<h1 style="margin-top: 20px">
+  {% if group %}
+  <span style="display: none" id="hidden_group_info" >
+    {{permissions|safe}}
+  </span>
+  <span>{{group.name}}</span>
+
+  {% else %}
+  <span>Add a group</span>
+  {% endif %}
+</h1>
+
+
+<div class="alert alert-danger" id="alert_message" role="alert" style="display: none">
+  Please fill out all the fields!
+</div>
+<link rel="stylesheet" href="{% static 'groups.css' %}">
+
+{% if group %}
+<form action="{% url 'group' group.id %}" method="POST" enctype="multipart/form-data" id='group_form'>
+{% else %}
+<form action="{% url 'addgroup'  %}" method="POST" enctype="multipart/form-data" id='group_form'>
+{% endif %}
+
+{% csrf_token %}
+
+  <div class="form-row">
+    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+      <label for="name">Name</label>
+      {% if group %}
+      <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{group.name}}"/>
+      {% else %}
+      <input type="text" class="form-control" id="name" name="name" placeholder="Name"/>
+      {% endif %}
+
+    </div>
+
+    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+      <label for="description">Description</label>
+      <label for="name">Name</label>
+      {% if group %}
+      <input type="text" class="form-control" id="description" name="description" placeholder="Give a short description" value="{{group.description}}"/>
+      {% else %}
+      <input type="text" class="form-control" id="description" name="description" placeholder="Give a short description"/>
+      {% endif %}
+
+
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 col-lg-6 col-xl-6"  >
+
+      <div class="form-inline">
+
+        <label for="search_available_permission">Available permissions</label>
+
+        <input type="text" id="search_available_permission" class="form-control" placeholder="Search permission" target_div = "available_pemission_div" onkeyup="search_permission(this)">
+      </div>
+        <div id="available_pemission_div" class="list-group list-group-flush  ">
+           <!-- Loaded with javascript in functionn refresh_available_permissions() -->
+       </div>
+    </div>
+
+
+
+    <div class="col-md-6 col-lg-6 col-xl-6" id="">
+
+      <div class="form-inline">
+        <label for="search_selected_permission">Selected permissions</label>
+        <input type="text" id="search_selected_permission" class="form-control" placeholder="Search permission" target_div = "selected_pemission_div" onkeyup="search_permission(this)">
+        <input type="hidden" id="selected_hidden_permissions" name="permissions">
+      </div>
+      <div id="selected_pemission_div" class="list-group list-group-flush ">
+
+      </div>
+    </div>
+  </div>
+  <br>
+  {% if group %}
+  <button id="submit_btn"   class="btn btn-primary" type="button" onclick="submit_form()">Save changes</button>
+  {% else %}
+  <button id="submit_btn"   class="btn btn-primary" type="button" onclick="submit_form()">Add the group</button>
+  {% endif %}
+
+  <br><br>
+</form>
+
+</div>
+
+<script type="text/javascript" src="{% static 'group.js' %}"></script>
+
+
+
+{% endblock %}
