@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.template.defaulttags import register
 from django.http import HttpResponse
 from django.http import Http404
+from enum import Enum
 import json
 @register.filter
 def get_item(dictionary, key):
@@ -59,11 +60,6 @@ def group(request, id):
         permissions = json.dumps(list(group.permissions.values('id', 'name')))
         return render(request, 'accounts/group.html', {'group':group, 'permissions':permissions})
 
-
-
-
-
-
 def addgroup(request):
     if request.method=="POST":
         if(request.POST["name"]=="" or request.POST["description"]=="" or request.POST["permissions"]==""):
@@ -94,3 +90,33 @@ def get_permissions(request):
     permissions = list(Permission.objects.filter(id__in=permission_ids).values('id', 'name'))
 
     return HttpResponse(json.dumps(permissions))
+
+
+def allusers(request):
+    users = User.objects.all()
+
+    if 'view' not in request.GET or request.GET['view']=='list':
+        return render(request, 'accounts/users/allusers_list.html', {'users':users})
+    elif request.GET['view']=='tabular':
+        return render(request, 'accounts/users/allusers_tabular.html', {'users':users})
+
+def adduser(request):
+
+
+    if request.method=="POST":
+        pass
+    #     if(request.POST["name"]=="" or request.POST["description"]=="" or request.POST["permissions"]==""):
+    #
+    #         raise Http404
+    #     group.name = request.POST['name']
+    #     group.description = request.POST['description']
+    #     group.save()
+    #     group.permissions.clear()
+    #     new_permissions = json.loads(request.POST['permissions'])
+    #     for permission in new_permissions:
+    #         permission = Permission.objects.get(id=permission['id'])
+    #         group.permissions.add(permission)
+    #     return redirect( 'allgroups')
+    elif request.method=="GET":
+
+        return render(request, 'accounts/users/adduser.html')

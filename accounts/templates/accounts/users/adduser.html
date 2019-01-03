@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<title>Add a user</title>
+<link rel="stylesheet" href="{% static 'users.css' %}">
+
+<br>
+<div class="container" id="form_container">
+  <div class="row">
+    <h1 class="col-md-6 col-lg-6 col-xl-6">Add a user</h1>
+  </div>
+  <br>
+
+
+  <form action="" method="POST" enctype="multipart/form-data" id='rock_form'>
+  {% csrf_token %}
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="first_name">First name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="last_name">Last name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name"/>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="last_name">Email address</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Email address"/>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="password1">First login password</label>
+        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="password2">Repeat password</label>
+        <input type="password" class="form-control" id="password2" name="password2" placeholder="Repeat password"/>
+      </div>
+
+    </div>
+
+
+
+    <button id="submit_btn" type="button"  class="btn btn-primary" onclick="submit_form()">Add the user</button>
+  </form>
+
+
+
+
+
+</div>
+
+<script>
+  var csrf_token = '{{csrf_token}}';
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+  });
+
+</script>
+<script type="text/javascript"  src="{% static 'users.js' %}"></script>
+
+{% endblock %}

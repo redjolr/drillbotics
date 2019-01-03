@@ -35,19 +35,16 @@
         </thead>
         <tbody>
           {% for group in groups %}
-
-                <tr class="table_row" db_id="{{group.id}}" onclick="javascript:{window.location.replace('{% url 'group' group.id %}')}">
-                  <!-- <a href="{% url 'group' group.id %}"> -->
-                  <th>{{forloop.counter}}</th>
-                  <td>{{group.name}}</td>
-                  <td>{{group.added_time}}</td>
-                  <td>{{user_count|get_item:group}} </td>
-                  <td>{{group.description}}</td>
-                  <td><span  group_id="{{group.id}}" class="oi oi-trash delete_icon" onclick="delete_group(this)" data-toggle="tooltip" title="Delete group""></span></td>
-                  <!-- </a> -->
-                </tr>
-
-
+              <tr class="table_row" db_id="{{group.id}}" onclick="javascript:{window.location.replace('{% url 'group' group.id %}')}">
+                <!-- <a href="{% url 'group' group.id %}"> -->
+                <th>{{forloop.counter}}</th>
+                <td>{{group.name}}</td>
+                <td>{{group.added_time}}</td>
+                <td>{{user_count|get_item:group}} </td>
+                <td>{{group.description}}</td>
+                <td><span  group_id="{{group.id}}" class="oi oi-trash delete_icon" onclick="delete_group(this)" data-toggle="tooltip" title="Delete group"></span></td>
+                <!-- </a> -->
+              </tr>
           {% endfor %}
         </tbody>
       </table>

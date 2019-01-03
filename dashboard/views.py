@@ -10,7 +10,6 @@ def home(request):
     sensors = Sensor.objects.all()
     data_count_set =Measurement.objects.all().values('experiment_id').filter(sensor_id=1).annotate(total=Count('experiment_id'))    #Gets the count of data points for every experiment
     data_count = {experiment['experiment_id']:experiment['total'] for experiment in data_count_set}
-
     experiments = []
     for exp in experiments_set:
         exp['data_count'] = data_count[exp['id']]

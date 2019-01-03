@@ -1,0 +1,81 @@
+{% extends 'allusers.html' %}
+
+
+
+{% block users_content %}
+<script src='http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' type='text/javascript'></script>
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
+
+  <div class="row">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <table id="users_table" >
+        <thead>
+          <tr>
+            <th >#</th>
+            <th>Username</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email address</th>
+            <th>Date joined</th>
+            <th>Last login</th>
+
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+              <tr class="table_row" db_id="{{user.id}}" onclick="javascript:{window.location.replace('')}">
+                <th>{{forloop.counter}}</th>
+
+                <td>{{user.username}}</td>
+                <td>{{user.first_name}}</td>
+                <td>{{user.last_name}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.date_joined}}</td>
+                <td>{{user.last_login}}</td>
+
+                <td><span  user_id="{{user}}" class="oi oi-trash delete_icon" onclick="delete_user(this)" data-toggle="tooltip" title="Delete user"></span></td>
+                <!-- </a> -->
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+
+  $( ".delete_icon" ).click(function( event ) {
+    event.stopPropagation();
+    // Do something
+  });
+
+  function delete_user(delete_icon)
+  {
+    user_id = $(delete_icon).attr('user_id');
+    url = '/groups/'+group_id+'/delete'
+    jQuery.ajax({
+      type: 'GET',
+      url: url,
+      data: { },
+      success: function(data) {
+        if(data=='deleted')
+          $(delete_icon).parent().parent().remove()
+        $('#delete_message' ).animate({
+          opacity: 1
+        }, 200);
+        $('#delete_message' ).animate({
+          opacity: 0
+        }, 2500);
+        $(".delete_icon").tooltip('dispose');
+      }
+    });
+  }
+
+  </script>
+
+
+
+{% endblock %}

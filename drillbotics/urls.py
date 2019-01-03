@@ -26,7 +26,8 @@ urlpatterns = [
     path('sensors/', include('sensors.urls')),
     path('experiments/', include('experiments.urls')),
     path('rocks/', include('rocks.urls')),
-    path('groups/', include('accounts.urls')),
+    path('groups/', include('accounts.groups_urls')),
+    path('users/', include('accounts.users_urls')),
     path('login/', accounts.views.login, name='login' ),
     path('logout/', accounts.views.logout, name='logout' ),
 

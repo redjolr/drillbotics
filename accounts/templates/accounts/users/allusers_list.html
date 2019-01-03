@@ -1,10 +1,10 @@
-{% extends 'allrocks.html' %}
+{% extends 'allusers.html' %}
 
 
 {% load staticfiles %}
-{% block rocks_content %}
+{% block users_content %}
 
-{% for rock in rocks.all %}
+{% for user in users.all %}
 
 <div class="row sensor_row">
 <div class="col-md-12 post">
@@ -12,7 +12,7 @@
     <div class="col-md-12">
 
         <h4>
-          <strong><a href="{% url 'rock' rock.id %}">{{rock.name}}</a></strong>
+          <strong><a href="">{{user.username}}</a></strong>
         </h4>
 
     </div>
@@ -20,8 +20,8 @@
   <div class="row">
     <div class="col-md-12 post-header-line">
       <!-- <span class="glyphicon glyphicon-user"></span>Unit of measure: <a href="#">AAAA</a> | -->
-      <span class="glyphicon glyphicon-user"></span>Added on: <a href="#">{{rock.added_time}}</a>  |
-      <span class="glyphicon glyphicon-user"></span>Materials: <a href="#">{{materials|get_item:rock.id}}</a>
+      <span class="glyphicon glyphicon-user"></span>Added on: <a href="#"></a>  |
+      <span class="glyphicon glyphicon-user"></span>Materials: <a href="#"></a>
 
 
 
@@ -30,15 +30,13 @@
   <div class="row post-content">
     <div class="col-md-3" >
       <a href="#">
-        {% if rock.picture %}
-        <img src="{{rock.picture.url}}"  alt="" style="width: 100%; " >
-        {% else %}
+
         <img src="{% static 'no_image_available.png' %}"  alt="" style="width: 100%;" >
-        {% endif %}
+
       </a>
     </div>
     <div class="col-md-9">
-      <p>{{rock.description_short}}...</p>
+      <p...</p>
       <p>
         <a class="btn btn-read-more" href="">Read more</a></p>
       </div>
@@ -47,5 +45,7 @@
 
 </div>
 {% endfor %}
+
+
 
 {% endblock %}
