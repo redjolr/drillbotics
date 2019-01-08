@@ -27,6 +27,7 @@ class SpecificOccupation(models.Model):
 
 
 # User.add_to_class('occupation', models.ForeignKey(SpecificOccupation, db_column = 'specific_occupation_id', on_delete = models.PROTECT, null=True))
+User._meta.default_permissions = ('view', 'add', 'change', 'delete' )
 User.add_to_class('occupation', models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.PROTECT, null=True))
 User.add_to_class('specialization', models.ForeignKey(Specialization, db_column = 'specialization_id', on_delete = models.PROTECT, null=True))
 User.add_to_class('password_changed', models.CharField(max_length=1, default ='f', null=False))
