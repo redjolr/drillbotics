@@ -161,7 +161,8 @@ def get_permissions(request):
     # permission_ids = list(range(1,9)) + list(range(21, 25)) + list(range(29,37))  #Database ids on table auth_permissions
     # permissions = list(Permission.objects.filter(id__in=permission_ids).values('id', 'name'))
     perm_codenames = ['add_material', 'view_rock', 'add_rock', 'change_rock', 'delete_rock', 'view_sensor', 'add_sensor', 'change_sensor', 'delete_sensor',
-                      'view_user', 'add_user','change_user','delete_user', 'add_group','view_group','change_group','delete_group']
+                      'view_user', 'add_user','change_user','delete_user', 'add_group', 'view_group','change_group','delete_group']
+                      
     permissions = list(Permission.objects.filter(codename__in=perm_codenames).values('id', 'name'))
 
     return HttpResponse(json.dumps(permissions))

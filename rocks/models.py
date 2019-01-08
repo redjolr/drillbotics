@@ -23,6 +23,7 @@ class Rock(models.Model):
         return self.name
     class Meta:
         db_table='rock'
+        default_permissions = ('add', 'change', 'delete', 'view')
 
     def description_short(self):
         return self.description[:300]
