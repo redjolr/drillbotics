@@ -1,24 +1,37 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from .models import Sensor
 from django.templatetags.static import static
+from accounts.accounts_utils import user_changed_password
+
+
+
+
 
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+@permission_required('sensors.view_sensor', login_url='home')
 def allsensors(request):
-
     sensors = Sensor.objects.all()
     if 'view' not in request.GET.keys() or request.GET['view']=='list' :
         return render(request, 'sensors/allsensors_list.html', {'sensors':sensors})
     elif request.GET['view']=='tabular':
         return render(request, 'sensors/allsensors_tabular.html', {'sensors':sensors})
 
+
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+@permission_required('sensors.view_sensor', login_url='home')
 def sensor(request, id):
     sensor = Sensor.objects.get(id=id)
     sensor.type= str(sensor.type)
     return render(request, 'sensors/sensor.html', {'sensor':sensor} )
 
+
+
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+@permission_required('sensors.add_sensor', login_url='sensors')
 def addsensor(request):
     if request.method=="POST": #when a new sensor is added
         if request.POST['name'] and request.POST['abbreviation'] and request.POST['description'] and request.POST['unit_of_measure']  and request.POST['type']:
@@ -33,14 +46,15 @@ def addsensor(request):
                 sensor.picture = request.FILES['picture']                                       #
             sensor.save()
             return redirect('/sensors/'+str(sensor.id))
-
     if request.method=="GET":
         return render(request, 'sensors/addsensor.html')
 
 
-@login_required(login_url='/login/')
-def update_sensor(request, id):
 
+@login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+@permission_required('sensors.change_sensor', login_url='sensors')
+def update_sensor(request, id):
     if request.method=="POST":
         sensor = get_object_or_404(Sensor, id=id)
         sensor.name = request.POST['name']

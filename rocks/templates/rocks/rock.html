@@ -15,7 +15,11 @@
       <div class='col-md-3 col-lg-3 col-xl-3 '><b id="rock_name" class="">{{rock.name}}</b>
       </div>
       <div class='col-md-1 col-lg-1 col-xl-1'>
-        <span class="oi oi-pencil" data-toggle="tooltip" title="Edit rock" data-placement="right" onclick="edit_rock_data()"></span>
+        {% if perms.rocks.change_rock %}
+            <span class="oi oi-pencil" data-toggle="tooltip" title="Edit rock" data-placement="right" onclick="edit_rock_data()"></span>
+        {% else %}
+          <span class="oi oi-pencil" data-toggle="tooltip" title="You cannot update rocks!" data-placement="right" ></span>
+        {% endif %}
       </div>
     </div>
 
@@ -76,8 +80,10 @@
         </div>
       </div>
     </div>
+    {% if perms.rocks.change_rock %}
+      <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
+    {% endif %}
 
-    <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
     <button type="button" class="btn btn-secondary" id="cancel_btn" onclick="edit_rock_data()">Cancel</button>
   </form>
 
@@ -153,7 +159,11 @@
           <div id="materials_added_check"> <span class="oi oi-check"></span> </div>
         </div>
         <div class="col-md-6 col-lg-6 col-xl-6">
-          <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" onclick="save_materials_to_db()">Add to database</button>
+          {% if perms.materials.add_material %}
+            <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" onclick="save_materials_to_db()">Add to database</button>
+          {% else %}
+            <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" data-toggle="tooltip" title="You do not have permission!" >Add to database</button>
+          {% endif %}
         </div>
 
       </div>

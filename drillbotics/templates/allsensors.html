@@ -9,7 +9,13 @@
     <div class="col-md-6"><h1 >Sensors</h1></div>
     <div class="col-md-6" >
         <div style="position: absolute; top: 50%; right: 0%; transform: translate(0%,-50%);">
-          <a href="{% url 'addsensor' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a sensor"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+
+          {% if perms.sensors.add_sensor %}
+            <a href="{% url 'addsensor' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a sensor"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% else %}
+            <a class="disabled" href=""><span class="oi oi-plus" data-toggle="tooltip" title="You cannot add sensors!"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% endif %}
+
           <a href="{% url 'sensors' %}?view=list"><span class="oi oi-list" data-toggle="tooltip" title="List view"></span></a>
           <a href="{% url 'sensors' %}?view=tabular"><span class="oi oi-spreadsheet" data-toggle="tooltip" title="Tabular view"></span></a>
         </div>

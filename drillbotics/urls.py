@@ -30,6 +30,7 @@ urlpatterns = [
     path('users/', include('accounts.users_urls')),
     path('login/', accounts.views.login, name='login' ),
     path('logout/', accounts.views.logout, name='logout' ),
-
+    path('profile/<int:id>', accounts.views.profile, name='profile' ),
+    path('first_login_password/', accounts.views.first_login_password, name='first_login_password' ),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

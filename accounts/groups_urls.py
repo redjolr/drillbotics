@@ -7,6 +7,7 @@ urlpatterns = [
     path('<int:id>/', views.group, name='group'),
     path('<int:id>/delete/', views.delete_group, name='delete_group'),
     path('add/', views.addgroup, name='addgroup'),
-    path('permissions/get/', views.get_permissions, name='get_permissions')
+    path('permissions/get/', views.get_permissions, name='get_permissions'),
+
 
 ]

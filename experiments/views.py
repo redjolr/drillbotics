@@ -1,19 +1,18 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.db import connection
 from .models import Experiment, Measurement
 from sensors.models import Sensor
-
-
 import matplotlib
 import matplotlib.pyplot as plt
 import uuid
-
-
 import json
+from accounts.accounts_utils import user_changed_password
+
 
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
 def allexperiments(request):
     experiments = Experiment.objects.raw('''
                     SELECT experiment.id, to_char( start_time, 'DD Month YYYY') as date,
@@ -39,8 +38,9 @@ def allexperiments(request):
 def create_random_walk():
     x = np.random.choice([-1,1],size=100, replace=True) # Sample with replacement from (-1, 1)
     return np.cumsum(x) # Return the cumulative sum of the elements
-    
+
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
 def experiment_data(request, id):
     downsample_val = float(request.GET['downsample'])   #ranges from 0 to 1
     total_points = int(request.GET['total_points'])     #total points of the experiment. Instead of accesing the database again, we get it from the client
@@ -85,6 +85,7 @@ def experiment_data(request, id):
     return HttpResponse(json.dumps({'rock': rock,'data':{'time': time_arr, 'sensors':sensors_data}, 'filename':filename}))
 
 @login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
 def download_dataset(request, experiment_id):
     response = HttpResponse()
     sensors = list(Sensor.objects.values('abbreviation').all().order_by('id'))
@@ -92,12 +93,10 @@ def download_dataset(request, experiment_id):
     exp_date = experiment[0]['start_time'].strftime( "%d-%B-%Y")
     data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id).order_by('time_micro', 'sensor_id')
 
-
     columns = "time_micro"
     for sensor in sensors:
         columns+= ","+sensor['abbreviation']
     response.write(columns+"\n")
-
     row = ''
     i=0
     for measurement in data:

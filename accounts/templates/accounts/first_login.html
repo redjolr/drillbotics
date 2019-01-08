@@ -1,0 +1,68 @@
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+<div class="container">
+  <form id='logoutForm' action="{% url 'logout' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" />
+  </form>
+  <form action="{% url 'first_login_password' %}" method="POST" id="form">
+      {% csrf_token %}
+    <div class="form-row">
+      <h3>Hello {{user.first_name}}!</h3>
+      <h3>You need to update your password!</h3>
+      <a href="javascript:{document.getElementById('logoutForm').submit()}">Logout instead!</a>
+    </div><br><br>
+
+
+
+    {% if missing_password %}
+      <div class="alert alert-danger" id="alert_message" role="alert" >
+        Please type both passwords!
+      </div>
+
+    {% endif %}
+    {% if passwords_dont_match %}
+      <div class="alert alert-danger" id="alert_message" role="alert" >
+        Passwords do not match!
+      </div>
+    {% endif %}
+
+    {% if invalid_password_messages %}
+      <div class="alert alert-danger" id="alert_message" role="alert" >
+        <b>Password is not strong enough!</b>
+        {% for message in invalid_password_messages %}
+          <div>{{message}}</div>
+        {% endfor %}
+      </div>
+
+
+    {% endif %}
+
+    <div class="form-row">
+      <div class="form-group col-md-12 col-lg-12 col-xl-12">
+        <label for="password1">Password</label>
+        <input type="password" name="password1" id="password1"  class="form-control" placeholder="Type password">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12 col-lg-12 col-xl-12">
+        <label for="password1">Retype password</label>
+        <input type="password" name="password2" id="password2"  class="form-control" placeholder="Retype password">
+      </div>
+    </div>
+
+    <button  class="btn btn-primary">Update the password</button>
+  </form>
+</div>
+
+<style>
+  #form {position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  padding: 80px 50px 80px 50px; border: 4px solid  #E7E7E7;
+        border-radius:10px; width: 600px;
+
+  }
+
+  body {background-color: white}
+</style>

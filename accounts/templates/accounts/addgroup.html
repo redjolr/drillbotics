@@ -18,7 +18,9 @@
   <span>Add a group</span>
   {% endif %}
 </h1>
-
+  {% if update_successful %}
+      <div class="alert alert-success" id="update_successful"><strong>Success!</strong> Group is updated!</div>
+  {% endif %}
 
 <div class="alert alert-danger" id="alert_message" role="alert" style="display: none">
   Please fill out all the fields!
@@ -86,7 +88,12 @@
   </div>
   <br>
   {% if group %}
-  <button id="submit_btn"   class="btn btn-primary" type="button" onclick="submit_form()">Save changes</button>
+    {% if perms.auth.change_group %}
+      <button id="submit_btn"   class="btn btn-primary" type="button" onclick="submit_form()">Save changes</button>
+    {% else %}
+      <button id="submit_btn" class="btn btn-primary disabled" type="button"  data-toggle="tooltip" title="You cannot change groups!" data-placement="right">Save changes</button>
+    {% endif %}
+
   {% else %}
   <button id="submit_btn"   class="btn btn-primary" type="button" onclick="submit_form()">Add the group</button>
   {% endif %}
@@ -96,6 +103,22 @@
 
 </div>
 
+<script>
+
+
+  {% if update_successful %}
+    window.history.pushState("", "", '/groups/'+{{group.id}}); 
+    $('#update_successful' ).animate({
+      opacity: 0,
+    }, 4500);
+
+    setTimeout(function() {
+      $('#update_successful' ).css('display', 'none')
+    }, 4000);
+
+  {% endif %}
+
+</script>
 <script type="text/javascript" src="{% static 'group.js' %}"></script>
 
 

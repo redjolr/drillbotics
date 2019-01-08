@@ -3,7 +3,8 @@
 <html>
 <head>
 {% load staticfiles  %}
-<meta charset="utf8" >
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 
@@ -27,11 +28,41 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link {% block nav_item_experiments %} {% endblock nav_item_experiments %}" href="{% url 'experiments' %}">
-          Experiments
-        </a>
-        <a class="nav-item nav-link {% block nav_item_sensors %} {% endblock nav_item_sensors %} " href="{% url 'sensors' %}">Sensors</a>
-        <a class="nav-item nav-link {% block nav_item_rocks %} {% endblock nav_item_rocks %}" href="{% url 'rocks' %}">Rocks</a>
+        <a class="nav-item nav-link {% block nav_item_experiments %} {% endblock nav_item_experiments %}" href="{% url 'experiments' %}">Experiments</a>
+
+
+        {% if perms.sensors.view_sensor %}
+          <a class="nav-item nav-link {% block nav_item_sensors %} {% endblock nav_item_sensors %} " href="{% url 'sensors' %}">Sensors</a>
+        {% else %}
+          <a class="disabled nav-link" href="" data-toggle="tooltip" title="You do not have permission!">Sensors</a>
+        {% endif %}
+
+        {% if perms.rocks.view_rock %}
+          <a class="nav-item nav-link {% block nav_item_rocks %} {% endblock nav_item_rocks %}" href="{% url 'rocks' %}">Rocks</a>
+        {% else %}
+          <a class="disabled nav-link" href="" data-toggle="tooltip" title="You do not have permission!">Rocks</a>
+        {% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            User management
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+            {% if perms.auth.view_user %}
+              <a class="dropdown-item" href="{% url 'allusers' %}">Users</a>
+            {% else %}
+              <a class="dropdown-item disabled" href="" data-toggle="tooltip" title="You cannot view users!" data-placement="right">Users</a>
+            {% endif %}
+
+
+            {% if perms.auth.view_group %}
+              <a class="dropdown-item" href="{% url 'allgroups' %}">Groups</a>
+            {% else %}
+              <a class="dropdown-item disabled" href="" data-toggle="tooltip" title="You cannot view groups!" data-placement="right">Groups</a>
+            {% endif %}
+
+          </div>
+        </li>
 
       </div>
     </div>
@@ -42,21 +73,23 @@
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          User management
+          Account
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'allusers' %}">Users</a>
-          <a class="dropdown-item" href="{% url 'allgroups' %}">Groups</a>
+
+          <a class="dropdown-item " href="{% url 'profile' user.id %}">Profile</a>
+          <a class="dropdown-item" href="javascript:{document.getElementById('logoutForm').submit()}">Logout</a>
+          <form id='logoutForm' action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+
+            <input type="hidden" />
+          </form>
+
         </div>
       </li>
 
-      <a class="nav-item nav-link " href="{% url 'sensors' %}">Account</a>
-      <a class="nav-item nav-link" href="javascript:{document.getElementById('logoutForm').submit()}">Logout</a>
-      <form id='logoutForm' action="{% url 'logout' %}" method="POST">
-        {% csrf_token %}
 
-        <input type="hidden" />
-      </form>
+
     </div>
 </nav>
 </header>
@@ -71,6 +104,10 @@
 <footer>
 
 </footer>
-
+<script>
+  $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+  } );
+</script>
 </body>
 </html>

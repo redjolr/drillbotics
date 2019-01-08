@@ -10,7 +10,7 @@ class Occupation(models.Model):
         db_table='occupation'
 
 class Specialization(models.Model):
-    name = models.CharField
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
@@ -26,6 +26,9 @@ class SpecificOccupation(models.Model):
         db_table='specific_occupation'
 
 
-User.add_to_class('occupation', models.ForeignKey(SpecificOccupation, db_column = 'specific_occupation_id', on_delete = models.PROTECT, null=True))
+# User.add_to_class('occupation', models.ForeignKey(SpecificOccupation, db_column = 'specific_occupation_id', on_delete = models.PROTECT, null=True))
+User.add_to_class('occupation', models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.PROTECT, null=True))
+User.add_to_class('specialization', models.ForeignKey(Specialization, db_column = 'specialization_id', on_delete = models.PROTECT, null=True))
+User.add_to_class('password_changed', models.CharField(max_length=1, default ='f', null=False))
 Group.add_to_class('added_time',  models.DateTimeField(auto_now_add=True, null=True))
 Group.add_to_class('description',  models.CharField(max_length=200, null=True))

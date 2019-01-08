@@ -6,46 +6,118 @@
 
 {% for user in users.all %}
 
-<div class="row sensor_row">
-<div class="col-md-12 post">
-  <div class="row">
-    <div class="col-md-12">
 
-        <h4>
-          <strong><a href="">{{user.username}}</a></strong>
-        </h4>
 
+<div class="row user_row">
+  <div class="container">
+    <div class="row username_row"  id ='username_row'>
+      <b style="padding: 2px"><a href="{% url 'profile' user.id %}">{{user.username}}</a></b>
+      <a id='edit_user_pencil' href="{% url 'user' user.id %}"><span class="oi oi-pencil" data-toggle="tooltip" title="Edit user" data-placement="right" ></span></a>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12 post-header-line">
-      <!-- <span class="glyphicon glyphicon-user"></span>Unit of measure: <a href="#">AAAA</a> | -->
-      <span class="glyphicon glyphicon-user"></span>Added on: <a href="#"></a>  |
-      <span class="glyphicon glyphicon-user"></span>Materials: <a href="#"></a>
+
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-3 col-lg-3 col-xl-3">
+        {% if sensor.picture %}
+        <img src="{{sensor.picture.url}}"  alt="" id='user_image' >
+        {%else%}
+        <img src="{% static 'no_image_available.png' %}"  alt=""  id='user_image'  >
+        {% endif %}
+      </div>
+
+      <div class="col-md-3 col-lg-3 col-xl-3 detail_block" >
+        <div  class="tight_wrapper">
+          <div class="detail">
+            <span class="detail_name"><b>First name</b></span>:  <span class="detail_info">{{user.first_name}}</span>
+          </div>
+          <div class="detail">
+            <span class="detail_name"><b>Last name</b></span>:
+            {% if user.last_name %}
+              <span class="detail_info">{{user.last_name}}</span>
+            {% else %}
+              <span class="detail_info none_info">None</span>
+            {% endif %}
+          </div>
+
+          <div class="detail">
+            <span class="detail_name"><b>Username</b></span>:<span class="detail_info">{{user.username}}</span>
+          </div>
+          <div class="detail email_detail" >
+            <div class="detail_name"><b>Email address</b></div>:
+            {% if user.email %}
+              <div >{{user.email}}</div>
+            {% else %}
+              <span class="detail_info none_info">None</span>
+            {% endif %}
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-lg-3 col-xl-3 detail_block">
+        <div class="detail"><span class="detail_name"><b>Is active</b></span>:<span class="detail_info">{{user.is_active}}</span></div>
+        <div class="detail"><span class="detail_name"><b>Joined</b></span>:<span class="detail_info">{{user.date_joined|date:'d M Y'}}</span></div>
+        <div class="detail">
+          <span class="detail_name"><b>Occupation</b></span>:
+          {% if user.occupation %}
+            <span class="detail_info">{{user.occupation}}</span>
+          {% else %}
+            <span class="detail_info none_info">None</span>
+          {% endif %}
+
+        </div>
+        <div class="detail specialization_detail" >
+          <div class="detail_name"><b>Specialization</b></div>:
+          {% if user.specialization %}
+            <div>{{user.specialization}}</div>
+          {% else %}
+            <span class="detail_info none_info">None</span>
+          {% endif %}
+
+
+        </div>
+      </div>
+
+      <div class="col-md-3 col-lg-3 col-xl-3 detail_block">
+        <div class="detail">
+          <div class="detail_name"><b>Groups</b>:</div>
+          <div class="groups"  >
+            {% if user.groups.all|length > 0 %}
+              {% for group in user.groups.values %}
+                <div class="detail_info group_detail">{{group.name}}</div><br>
+              {% endfor %}
+            {% else %}
+              <span class="detail_info none_info">No groups</span>
+            {% endif %}
 
 
 
-    </div>
-  </div>
-  <div class="row post-content">
-    <div class="col-md-3" >
-      <a href="#">
 
-        <img src="{% static 'no_image_available.png' %}"  alt="" style="width: 100%;" >
-
-      </a>
-    </div>
-    <div class="col-md-9">
-      <p...</p>
-      <p>
-        <a class="btn btn-read-more" href="">Read more</a></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+
+
 </div>
+
+
+
 {% endfor %}
+<script>
+  groups = $(".groups");
+  for(var i=0; i<groups.length; i++)
+  {
+    if($(groups[i]).height() >$(".tight_wrapper").height() )
+    {
 
+      $(groups[i]).css("height", $(".tight_wrapper").css("height"));
+      $(groups[i]).css("overflow-y", "scroll");
+    }
+  }
 
+</script>
 
 {% endblock %}

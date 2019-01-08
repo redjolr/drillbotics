@@ -1,3 +1,28 @@
 .table_row:hover {background-color: #f2f7ff; cursor: pointer}
 #delete_message {font-size: 60px; color: green; position: fixed;top: 100px; right: 50%; transform: translate(50%,0);z-index: 2; opacity:0}
 .delete_icon:hover {color: red}
+
+#available_groups_div, #selected_groups_div {width: 100%; height: 250px; border: 1px solid gray; overflow-y: scroll; margin-bottom:10px}
+.groups_available:hover {background-color: #f2f7ff; cursor: pointer}
+#user_form{margin-top: 20px}
+#username_row {font-size: 25px; border-bottom: 1px solid #DDD; position: relative}
+#edit_user_pencil{color: black; position: relative; margin-left:30px; transform: translate(0, 5%)}
+#image_div{}
+#user_image{width: 100%}
+.user_row{margin-bottom: 35px}
+.username_row{margin: 0}
+.detail{width: 100%; margin-bottom:5px}
+.detail_name{position: relative; float: left;}
+.detail_info{position: relative; float: right;}
+.detail_block{padding: 50px 20px 50px 20px; font-size: 17px; }
+
+.email_detail, .specialization_detail{margin-top: 20px}
+.group_detail {margin-right: 10px}
+
+.none_info{color: rgb(190, 190, 190)}
+
+::-webkit-scrollbar {  width: 4px;}
+
+::-webkit-scrollbar-track {    background: #f1f1f1;}
+
+::-webkit-scrollbar-thumb {background: #888;}

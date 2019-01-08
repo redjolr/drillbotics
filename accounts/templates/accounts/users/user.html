@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<title>{{existing_user.first_name}} {{existing_user.last_name}}</title>
+<link rel="stylesheet" href="{% static 'users.css' %}">
+
+
+<div class="container" id="form_container">
+  <div class="row">
+      <h1 class="col-md-6 col-lg-6 col-xl-6" style="margin-top: 20px">{{existing_user.first_name}} {{existing_user.last_name}}</h1>
+  </div>
+  <div class="alert alert-danger" id="alert_message" role="alert" style="display: none">
+    Please fill out the necessary fields!
+  </div>
+  {% if update_successful %}
+    <div class="alert alert-success" id="update_successful"><strong>Success!</strong> User is updated!</div>
+  {% endif %}
+
+  {% if user_exists %}
+    <div class="alert alert-danger" id="alert_message" role="alert" >Username existss!</div>
+  {% endif %}
+
+  {% if invalid_password_messages %}
+  <div class="alert alert-danger" id="alert_message" role="alert" >
+    {% for message in invalid_password_messages %}
+      <div>
+          {{message}}
+      </div>
+    {% endfor %}
+    </div>
+  {% endif %}
+
+
+  <form action="{% url 'user' existing_user.id %}" method="POST" enctype="multipart/form-data" id='user_form'>
+
+
+  {% csrf_token %}
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="first_name">First name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name" value="{{form_filled_data.first_name}}"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="last_name">Last name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name" value="{{form_filled_data.last_name}}"/>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{form_filled_data.username}}"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="email">Email address</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Email address" value="{{form_filled_data.email}}"/>
+      </div>
+
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="password1">Password</label>
+        <input type="password" class="form-control" id="password1" name="password1" placeholder="If password fields both empty, password doesn't change!"/>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="password2">Repeat password</label>
+        <input type="password" class="form-control" id="password2" name="password2" placeholder="If password fields both empty, password doesn't change!"/>
+      </div>
+    </div>
+
+
+    <div class="form-row">
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="occupation">Occupation</label>
+        <select name="occupation" id="occupation" class="form-control">
+          <option value="" disabled selected>Select occupation</option>
+          {% for occupation in occupations %}
+            {% if form_filled_data and  occupation.id|stringformat:"i" == form_filled_data.occupation%}
+              <option value="{{occupation.id}}" selected>{{occupation.name}}</option>
+            {% else %}
+              <option value="{{occupation.id}}">{{occupation.name}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group col-md-6 col-lg-6 col-xl-6">
+        <label for="specialization">Specialization</label>
+        <select name="specialization" id="specialization" class="form-control">
+          <option value="" disabled selected >Select specialization</option>
+          {% for specialization in specializations %}
+            {% if form_filled_data and  specialization.id|stringformat:"i" == form_filled_data.specialization%}
+              <option value="{{specialization.id}}" selected>{{specialization.name}}</option>
+            {% else %}
+              <option value="{{specialization.id}}">{{specialization.name}}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+    </div>
+    <div class="form-row">
+      <div class="col-md-6 col-lg-6 col-xl-6"  >
+          <label for="">Available groups</label>
+          <div id="available_groups_div" class="list-group list-group-flush  ">
+             <!-- Loaded with javascript in functionn refresh_available_groups() -->
+          </div>
+      </div>
+      <div class="col-md-6 col-lg-6 col-xl-6" id="">
+          <label for="">Selected groups</label>
+          <div id="selected_groups_div" class="list-group list-group-flush ">
+
+          </div>
+
+          <input type="hidden" id="selected_hidden_groups" name="groups" value='{{form_filled_data.groups|safe}}'>
+      </div>
+    </div>
+    {% if perms.auth.change_user %}
+      <button id="submit_btn" class="btn btn-primary"  type="button"  onclick="submit_form()">Update user data</button>
+    {% else %}
+      <button id="submit_btn" class="btn btn-primary disabled"  type="button" data-toggle="tooltip" title="You cannot edit users!" data-placement="right">Update user data</button>
+    {% endif %}
+
+  </form>
+<br>
+
+
+
+
+</div>
+
+<script>
+  {% if updating_user %}
+    var updating_user=true;
+
+  {% endif %}
+  var csrf_token = '{{csrf_token}}';
+  $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+  });
+  {% if update_successful %}
+    window.history.pushState("", "", '/users/'+{{existing_user.id}}); 
+    $('#update_successful' ).animate({
+      opacity: 0,
+    }, 4500);
+
+    setTimeout(function() {
+      $('#update_successful' ).css('display', 'none')
+    }, 4000);
+
+  {% endif %}
+
+</script>
+<script type="text/javascript"  src="{% static 'user.js' %}"></script>
+
+{% endblock %}

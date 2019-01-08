@@ -9,7 +9,14 @@
     <div class="col-md-6"><h1 >Rocks</h1></div>
     <div class="col-md-6" >
         <div style="position: absolute; top: 50%; right: 0%; transform: translate(0%,-50%);">
-          <a href="{% url 'addrock' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a rock"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% if perms.rocks.add_rock %}
+            <a href="{% url 'addrock' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a rock"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% else %}
+            <a class="disabled" href=""><span class="oi oi-plus" data-toggle="tooltip" title="You cannot add rocks!"></span></a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+
+          {% endif %}
+
+
           <a href="{% url 'rocks' %}?view=list"><span class="oi oi-list" data-toggle="tooltip" title="List view"></span></a>
           <a href="{% url 'rocks' %}?view=tabular"><span class="oi oi-spreadsheet" data-toggle="tooltip" title="Tabular view"></span></a>
         </div>

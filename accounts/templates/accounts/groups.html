@@ -16,7 +16,13 @@
     <div class="col-md-6 col-lg-6 col-xl-6"><h1>Groups  </h1></div>
     <div class="col-md-6 col-lg-6 col-xl-6" >
         <div style="position: absolute; top: 50%; right: 0%; transform: translate(0%,-50%);">
-          <a href="{% url 'addgroup' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a group"></span></a>
+          {% if perms.auth.add_group %}
+            <a href="{% url 'addgroup' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a group"></span></a>
+          {% else %}
+            <a href=""><span class="oi oi-plus" data-toggle="tooltip" data-toggle="tooltip" title="You cannot add groups!" data-placement="left"></span></a>
+
+          {% endif %}
+
         </div>
     </div>
   </div>
@@ -42,7 +48,14 @@
                 <td>{{group.added_time}}</td>
                 <td>{{user_count|get_item:group}} </td>
                 <td>{{group.description}}</td>
-                <td><span  group_id="{{group.id}}" class="oi oi-trash delete_icon" onclick="delete_group(this)" data-toggle="tooltip" title="Delete group"></span></td>
+                {% if perms.auth.delete_group %}
+                  <td>
+                  <span  group_id="{{group.id}}" class="oi oi-trash delete_icon" user_count={{user_count|get_item:group}} onclick="delete_group(this)" data-toggle="tooltip" title="Delete group"></span>
+                  </td>
+                {% else %}
+                  <td><span  group_id="{{group.id}}" class="oi oi-trash delete_icon" data-toggle="tooltip" title="You cannot delete groups!"></span></td>
+                {% endif %}
+
                 <!-- </a> -->
               </tr>
           {% endfor %}
@@ -65,6 +78,15 @@ $( ".delete_icon" ).click(function( event ) {
 
 function delete_group(delete_icon)
 {
+  var reply = confirm("Are you sure that you want to delete the group?");
+  if (reply == false)
+    return;
+  user_count = parseInt($(delete_icon).attr('user_count'));
+  if(user_count>0)
+  {
+    alert("You cannot delete a group with users!");
+    return;
+  }
   group_id = $(delete_icon).attr('group_id');
   url = '/groups/'+group_id+'/delete'
   jQuery.ajax({

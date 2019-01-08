@@ -55,11 +55,10 @@ function move_permission(permission_div)
   else if(!permission_in_array(permission_id, selected_permissions_register)) //
   {
       selected_permissions_register.push({ 'id': permission_id  ,'name':$(permission_div).text()})
-      $("#selected_hidden_permissions").val(JSON.stringify(selected_permissions_register));
   }
+  $("#selected_hidden_permissions").val(JSON.stringify(selected_permissions_register));
   refresh_available_permissions()
   refresh_selected_permissions()
-
   search_permission($("#search_available_permission"));
   search_permission($("#search_selected_permission"));
 }

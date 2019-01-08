@@ -19,7 +19,12 @@
       <input type="text" class="sensor_input" name="name" value="{{sensor.name}}">
     </div>
     <div class='col-md-1 col-lg-1 col-xl-1'>
-      <span class="oi oi-pencil" data-toggle="tooltip" title="Edit sensor" data-placement="right" onclick="edit_sensor_data()"></span>
+      {% if perms.sensors.change_sensor %}
+        <span class="oi oi-pencil" data-toggle="tooltip" title="Edit sensor" data-placement="right" onclick="edit_sensor_data()"></span>
+      {% else %}
+        <span class="oi oi-pencil" data-toggle="tooltip" title="You cannot edit the sensor!" data-placement="right" ></span>
+      {% endif %}
+
     </div>
   </div>
 
@@ -46,7 +51,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="list-group-item">
         <div class="container">
           <div class="row">
@@ -95,7 +100,10 @@
       </div>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
+  {% if perms.sensors.change_sensor %}
+    <button type="submit" class="btn btn-primary" id="save_btn">Save Changes</button>
+  {% endif %}
+
   <button type="button" class="btn btn-secondary" id="cancel_btn" onclick="edit_sensor_data()">Cancel</button>
 </form>
 

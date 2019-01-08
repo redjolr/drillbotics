@@ -11,11 +11,16 @@
 <span class="oi oi-circle-check" id="delete_message" ></span>
 
 <div class="container">
-  <div class="row" style="margin: 20px 0px 20px 0px">
-    <div class="col-md-6 col-lg-6 col-xl-6"><h1>Users</h1></div>
+  <div class="row" style="margin: 20px 0px 20px 0px; ">
+    <div class="col-md-6 col-lg-6 col-xl-6" style="padding: 0"><h1>Users</h1></div>
     <div class="col-md-6 col-lg-6 col-xl-6" >
         <div style="position: absolute; top: 50%; right: 0%; transform: translate(0%,-50%);">
-          <a href="{% url 'adduser' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a user"></span></a>  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% if perms.auth.add_user %}
+            <a href="{% url 'adduser' %}"><span class="oi oi-plus" data-toggle="tooltip" title="Add a user"></span></a>  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% else %}
+            <a href=""><span class="oi oi-plus" data-toggle="tooltip" title="You cannot add users!"></span></a>  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+          {% endif %}
+
           <a href="{% url 'allusers'  %}?view=list"><span class="oi oi-list" data-toggle="tooltip" title="List view"></span></a>
           <a href="{% url 'allusers' %}?view=tabular"><span class="oi oi-spreadsheet" data-toggle="tooltip" title="Tabular view"></span></a>
         </div>
@@ -30,10 +35,12 @@
 
 <script>
   $(document).ready(function() {
-      $('#users_table').DataTable();
       $('[data-toggle="tooltip"]').tooltip();
   } );
 </script>
 
+<style>
+
+</style>
 
 {% endblock %}

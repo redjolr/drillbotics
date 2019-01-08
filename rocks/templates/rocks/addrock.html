@@ -122,7 +122,12 @@
           <div id="materials_added_check"> <span class="oi oi-check"></span> </div>
         </div>
         <div class="col-md-6 col-lg-6 col-xl-6">
-          <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" onclick="save_materials_to_db()">Add to database</button>
+          {% if perms.materials.add_material %}
+            <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" onclick="save_materials_to_db()">Add to database</button>
+          {% else %}
+            <button id="save_materials_to_db_btn" type="button" class="btn btn-primary" data-toggle="tooltip" title="You do not have permission!" >Add to database</button>
+          {% endif %}
+
         </div>
 
       </div>
