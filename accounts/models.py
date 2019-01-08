@@ -24,7 +24,7 @@ class Specialization(models.Model):
 #         return self.name
 #     class Meta:
 #         db_table='specific_occupation'
-
+ 
 
 
 User.add_to_class('occupation', models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.PROTECT, null=True))
