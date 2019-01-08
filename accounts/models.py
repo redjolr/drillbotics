@@ -17,13 +17,13 @@ class Specialization(models.Model):
     class Meta:
         db_table='specialization'
 
-class SpecificOccupation(models.Model):
-    occupation = models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.PROTECT)
-    specialization = models.ForeignKey(Specialization, db_column = 'specialization_id', on_delete = models.PROTECT)
-    def __str__(self):
-        return self.name
-    class Meta:
-        db_table='specific_occupation'
+# class SpecificOccupation(models.Model):
+#     occupation = models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.PROTECT)
+#     specialization = models.ForeignKey(Specialization, db_column = 'specialization_id', on_delete = models.PROTECT)
+#     def __str__(self):
+#         return self.name
+#     class Meta:
+#         db_table='specific_occupation'
 
 
 

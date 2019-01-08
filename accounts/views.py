@@ -3,7 +3,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.password_validation  import validate_password
 from django.core.exceptions import ValidationError
-from .models import   Occupation, Specialization, SpecificOccupation
+from .models import   Occupation, Specialization
 from django.template.defaulttags import register
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
@@ -162,7 +162,7 @@ def get_permissions(request):
     # permissions = list(Permission.objects.filter(id__in=permission_ids).values('id', 'name'))
     perm_codenames = ['add_material', 'view_rock', 'add_rock', 'change_rock', 'delete_rock', 'view_sensor', 'add_sensor', 'change_sensor', 'delete_sensor',
                       'view_user', 'add_user','change_user','delete_user', 'add_group', 'view_group','change_group','delete_group']
-                      
+
     permissions = list(Permission.objects.filter(codename__in=perm_codenames).values('id', 'name'))
 
     return HttpResponse(json.dumps(permissions))
