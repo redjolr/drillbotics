@@ -22,3 +22,4 @@ class Measurement(models.Model):
 
     class Meta:
         db_table = 'measurement'
+        default_permissions = ('view', 'add', 'change', 'delete' )

@@ -16,6 +16,7 @@ class Sensor(models.Model):
 
     class Meta:
         db_table = 'sensor'
+        default_permissions = ('view', 'add', 'change', 'delete' )
 
     def added_time_pretty(self):
         return self.added_time.strftime("%d %B %Y")
