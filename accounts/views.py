@@ -36,7 +36,10 @@ def login(request):
                 return redirect('/first_login_password/') #+str(user.id)  )
             else:
                 auth.login(request, user)
+                if 'remember-me' not in request.POST:
+                    request.session.set_expiry(0)
                 return redirect('home')
+
         else:
             return render(request, 'accounts/login.html', {'error':'Username or password is incorrect!'})
 
