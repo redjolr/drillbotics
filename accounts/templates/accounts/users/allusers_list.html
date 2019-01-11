@@ -17,10 +17,10 @@
 
     <div class="row" style="margin-top: 20px">
       <div class="col-md-3 col-lg-3 col-xl-3">
-        {% if sensor.picture %}
-        <img src="{{sensor.picture.url}}"  alt="" id='user_image' >
+        {% if user.picture %}
+        <img src="{{user.picture.url}}"  alt="" class='user_image' >
         {%else%}
-        <img src="{% static 'no_image_available.png' %}"  alt=""  id='user_image'  >
+        <img src="{% static 'user_picture_not_given.png' %}"  alt=""  class='user_image'  >
         {% endif %}
       </div>
 

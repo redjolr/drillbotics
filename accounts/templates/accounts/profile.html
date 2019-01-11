@@ -13,7 +13,7 @@
           {% if user.picture %}
           <img src="{{user.picture.url}}"  alt="" id='profile_pic' >
           {%else%}
-          <img src="{% static 'no_image_available.png' %}"  alt=""  id='profile_pic'  >
+          <img src="{% static 'user_picture_not_given.png' %}"  alt=""  id='profile_pic'  >
           {% endif %}
         </div>
         <label for="picture_input" class="rock_input" id="upload_picture_label">

@@ -8,13 +8,13 @@
 #username_row {font-size: 25px; border-bottom: 1px solid #DDD; position: relative}
 #edit_user_pencil{color: black; position: relative; margin-left:30px; transform: translate(0, 5%)}
 #image_div{}
-#user_image{width: 100%}
+.user_image{width: 80%}
 .user_row{margin-bottom: 35px}
 .username_row{margin: 0}
 .detail{width: 100%; margin-bottom:5px}
 .detail_name{position: relative; float: left;}
 .detail_info{position: relative; float: right;}
-.detail_block{padding: 50px 20px 50px 20px; font-size: 17px; }
+.detail_block{padding: 20px 20px 50px 20px; font-size: 17px; }
 
 .email_detail, .specialization_detail{margin-top: 20px}
 .group_detail {margin-right: 10px}
