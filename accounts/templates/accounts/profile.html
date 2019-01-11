@@ -4,9 +4,153 @@
 
 {% block content %}
 {% load staticfiles %}
-<div class="container">
-  <h1>Page under construction!</h1>
+<link rel="stylesheet" href="{% static 'profile.css' %}">
+<div class="container" >
+  <div class="row" id="picture_row">
+    <div class="col-md-12 col-lg-12 col-xl-12" >
+      <div id="picture_outter_frame">
+        <div id="picture_inner_frame">
+          <img src="{% static 'no_image_available.png' %}" alt="" id="profile_pic">
+        </div>
+      </div>
 
+      <div id="general_info">
+        <div id="name_info">{{user.first_name}} {{user.last_name}}</div>
+        <div>
+          <span class="occ_spec_info">{{user.occupation}}</span> &nbsp; <span style="font-size:22px">/</span>&nbsp;
+          <span class="occ_spec_info">{{user.specialization}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-lg-12 col-xl-12" style="">
+    <div class="row" id="navigation_row" style="width: 100%" >
+      <div id="tabbed_pane" class="ui-widget-content pane" style="width: 100%">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist"> <!--Where the tab headers are added -->
+             <a class="nav-item nav-link active" id="nav-details-tab" data-toggle="tab" href="#nav-details" role="tab" aria-controls="nav-details" aria-selected="true">Details</a>
+              <a class="nav-item nav-link " id="nav-groups-tab" data-toggle="tab" href="#nav-groups" role="tab" aria-controls="nav-groups" aria-selected="false">Groups/Permissions</a>
+             <!-- <a class="nav-item nav-link " id="nav-activity-tab" data-toggle="tab" href="#nav-activity" role="tab" aria-controls="nav-activity" aria-selected="false">Activity</a> -->
+
+             <!-- <a class="nav-item nav-link " id="nav-publications-tab" data-toggle="tab" href="#nav-publications" role="tab" aria-controls="nav-publications" aria-selected="false">Publications</a> -->
+            {% if can_change_password %}
+             <a class="nav-item nav-link " id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="false">Password</a>
+            {% endif %}
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent"> <!--Where the panels of the tabs are added-->
+          <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+            <div class="detail_row">
+              <span class="detail_info_name">First name:</span><span class="detail_info">{{user.first_name}}</span>
+            </div>
+            <div class="detail_row">
+              <span class="detail_info_name">Last name:</span><span class="detail_info">{{user.last_name}}</span>
+            </div>
+            <div class="detail_row">
+                <span class="detail_info_name">Username:</span><span class="detail_info">{{user.username}}</span>
+            </div>
+            <div class="detail_row">
+                <span class="detail_info_name">Email address:</span>
+                {% if user.email %}
+                  <span class="detail_info">{{user.email}}</span>
+                {% else %}
+                  <span class="none_info">None</span>
+                {% endif %}
+            </div>
+            <div class="detail_row">
+                <span class="detail_info_name">Birthday:</span><span class="detail_info" style="color: rgb(190, 190, 190); ">Unavailable for now</span>
+            </div>
+            <div class="detail_row">
+                <span class="detail_info_name">Occupation:</span>
+                {% if user.occupation %}
+                  <span class="detail_info">{{user.occupation}}</span>
+                {% else %}
+                  <span class="none_info">None</span>
+                {% endif %}
+            </div>
+            <div class="detail_row">
+              <span class="detail_info_name">Specialization:</span>
+              {% if user.specialization %}
+                <span class="detail_info">{{user.specialization}}</span>
+              {% else %}
+                <span class="none_info">None</span>
+              {% endif %}
+
+            </div>
+          </div>
+
+          <div class="tab-pane fade" id="nav-groups" role="tabpanel" aria-labelledby="nav-groups-tab">
+
+            {% for group, permissions in group_permissions.items %}
+              <div class="group_div">
+                <div class="group_name">{{group}}</div>
+                <div class="permissions">
+                  {% for permission in permissions %}
+                    <div class="permission">{{permission.name}}</div>
+                  {% endfor %}
+                  <div class="see_more_btn" onclick="see_more(this, event)"><a href="" >See more</a></div>
+                  <div class="see_less_btn" onclick="see_less(this, event)"><a href="">See less</a></div>
+                </div>
+
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
+            <div>ACTIVITY</div>
+          </div> -->
+
+          <!-- <div class="tab-pane fade" id="nav-publications" role="tabpanel" aria-labelledby="nav-publications-tab">
+            <div>PUBLICATIONS</div>
+          </div> -->
+          {% if can_change_password %}
+            <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+              <div class="alert alert-danger" id="fill_out_fields_alert" role="alert" >Please fill out all the fields!</div>
+              <div class="alert alert-danger" id="pass_dont_match_alert" role="alert" >Passwords do not match!</div>
+              <div class="alert alert-danger" id="wrong_current_password" role="alert" >The given current password is wrong!</div>
+              <div class="alert alert-danger" id="invalid_password_messages" role="alert" ><b>Password is not strong enough!</b></div>
+              <div class="alert alert-success" id="password_change_success" role="alert">Password successfully changed!</div>
+              <form action="" method="POST" id='password_form'>
+                {% csrf_token %}
+                <div class="form-row">
+                  <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                    <label for="current_password">Current password</label>
+                    <input type="password" class="form-control password_field" id="current_password" name="current_password" placeholder="Type current password"/>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                    <label for="password1">New password</label>
+                    <input type="password" class="form-control password_field" id="password1" name="password1" placeholder="Type new password"/>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                    <label for="password2">Retype password</label>
+                    <input type="password" class="form-control password_field" id="password2" name="password2" placeholder="Retype new password"/>
+                  </div>
+                </div>
+
+                <button id="change_pass_btn" class="btn btn-primary"  type="button"  onclick="submit_change_pass()">
+                    Change password
+                </button>
+                <img src="{% static 'loading.gif' %}" id="loading_gif">
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+  var csrf_token = '{{csrf_token}}';
+</script>
+<script type='text/javascript' src="{% static 'profile.js' %}"></script>
 </div>
+
+
+
 
 {% endblock %}

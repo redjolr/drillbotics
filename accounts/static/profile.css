@@ -1,0 +1,31 @@
+#picture_row{height: 200px; margin-top: 20px; margin-bottom: 30px}
+#navigation_row{height: 50px; }
+#picture_outter_frame {height: 180px; width: 180px; border: 1px solid #E7E7E7 ; display: inline-block; position: relative; top: 50%; transform: translate(0,-50%); }
+#picture_inner_frame{height: 160px; width: 160px;  padding: 0}
+#profile_pic{width:100%; height:100%;}
+#general_info{ display: inline-block;  position: absolute; top: 50%; transform: translateY(-50%);  margin-left: 30px }
+#name_info {font-size: 35px}
+.occ_spec_info{font-size: 20px; color: #0000FF;}
+
+#nav_options{}
+.nav_option{font-size:20px; color: gray}
+
+.nav-item.nav-link.active {background-color: #F8F8F8}
+.nav-tab {width: 100%}
+
+
+.detail_row{height: 55px; border-bottom: 1px solid #E7E7E7; font-size: 18px;}
+.detail_info_name{width: 250px; display: inline-block;  position: relative; top: 50%; transform: translateY(-50%); font-weight: bold}
+.detail_info{width: 350px;  display: inline-block;   position: relative; top: 50%; transform: translateY(-50%);}
+.none_info{color: rgb(190, 190, 190); width: 350px;  display: inline-block;   position: relative; top: 50%; transform: translateY(-50%);}
+
+
+.group_div{ position: relative; min-height: 70px; border-bottom: 1px solid #E7E7E7; padding-top: 20px; padding-bottom: 20px;}
+.group_name{font-size: 18px; width: 300px; font-weight: bold; display: inline-block; position: relative; vertical-align: top}
+.permissions, .see_more_btn{font-size: 18px; display: inline-block; position: relative; }
+.see_more_btn, .see_less_btn{display: none}
+#nav-password{margin-bottom: 20px}
+#nav-password{padding-top: 15px}
+#fill_out_fields_alert, #pass_dont_match_alert, #wrong_current_password, #password_change_success, #invalid_password_messages, #loading_gif{display: none}
+#loading_gif{margin-left:10px}
+/*position: absolute; top: 50%; right: 50%; transform: translate(50%,-50%);*/

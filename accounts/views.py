@@ -15,7 +15,6 @@ import json
 
 @register.filter
 def get_item(dictionary, key):
-
     if key in dictionary:
         return dictionary[key]
 
@@ -29,7 +28,6 @@ def login(request):
     if request.method=='POST':
         user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
-            # last_login = User.objects.filter(id=user.id).values('last_login')[0]['last_login']
             password_changed = False if User.objects.filter(id=user.id).values('password_changed')[0]['password_changed']=='f' else True
             if password_changed==False:
                 auth.login(request, user)
@@ -37,7 +35,7 @@ def login(request):
             else:
                 auth.login(request, user)
                 if 'remember-me' not in request.POST:
-                    request.session.set_expiry(0)
+                    request.session.set_expiry(0) #Value 0 means that the session expires at browser close
                 return redirect('home')
 
         else:
@@ -61,7 +59,6 @@ def first_login_password(request):
             return render(request, 'accounts/first_login.html', {'user':user, 'missing_password':True})
         elif request.POST['password1'] != request.POST['password2']:
             return render(request, 'accounts/first_login.html', {'user':user, 'passwords_dont_match':True})
-
         try:
             validate_password(request.POST["password1"], user=user)
         except ValidationError as error:
@@ -75,7 +72,31 @@ def first_login_password(request):
         auth.login(request, user)
         return redirect('home')
 
+@login_required(login_url='/login/')
+def change_password(request):
+    user = request.user
+    invalid_password_messages = None
 
+    if request.method=='POST':
+        for i in range(10000):
+            print(" ")
+
+        if request.POST['password1']=="" or request.POST['password2']=="" or request.POST['current_password']=="":
+            return HttpResponse("passwords_missing")
+        elif request.POST['password1'] != request.POST['password2']:
+            return HttpResponse("passwords_dont_match")
+        if user.check_password(request.POST['current_password'])==False:
+            return HttpResponse("wrong_current_password")
+        try:
+            validate_password(request.POST["password1"], user=user)
+        except ValidationError as error:
+            invalid_password_messages = json.dumps(list(error))
+
+        if invalid_password_messages is not None:
+            return HttpResponse(invalid_password_messages)
+        user.set_password(request.POST['password1'])
+        user.save()
+        return HttpResponse('success')
 
 def logout(request):
     if request.method == 'POST':
@@ -161,13 +182,9 @@ def delete_group(request, id):
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def get_permissions(request):
-    # permission_ids = list(range(1,9)) + list(range(21, 25)) + list(range(29,37))  #Database ids on table auth_permissions
-    # permissions = list(Permission.objects.filter(id__in=permission_ids).values('id', 'name'))
     perm_codenames = ['add_material', 'view_rock', 'add_rock', 'change_rock', 'delete_rock', 'view_sensor', 'add_sensor', 'change_sensor', 'delete_sensor',
                       'view_user', 'add_user','change_user','delete_user', 'add_group', 'view_group','change_group','delete_group']
-
     permissions = list(Permission.objects.filter(codename__in=perm_codenames).values('id', 'name'))
-
     return HttpResponse(json.dumps(permissions))
 
 @login_required(login_url='/login/')
@@ -192,8 +209,6 @@ def adduser(request):
             return HttpResponse(status=500)
         if request.POST["password1"]!=request.POST["password2"]:
             return HttpResponse(status=500)
-
-        # username_exists = False if User.objects.get(username=request.POST['username']) else True
         username_exists = User.objects.filter(username=request.POST['username']).exists()
 
         user = User()
@@ -301,4 +316,13 @@ def get_groups(request):
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def profile(request, id):
-    return render(request, 'accounts/profile.html')
+    user = User.objects.get(id=id)
+    groups = list( user.groups.all())
+    group_permissions = {}
+    for group in groups:
+        permissions = group.permissions.values('name')
+        group_permissions[group.name]= permissions
+    if(id==request.user.id):
+        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions, 'can_change_password':True})
+    else:
+        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions})
