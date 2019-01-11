@@ -69,7 +69,7 @@
 
     <div class="nav navbar-nav navbar-right">
       <!-- <a href="#account" class="nav-item nav-link">Account</a> -->
-      <span class="nav-item nav-link" >Hello {{user.get_short_name}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="nav-item nav-link" >Hello {{request.user.get_short_name}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

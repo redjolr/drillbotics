@@ -1,11 +1,19 @@
 #picture_row{height: 200px; margin-top: 20px; margin-bottom: 30px}
 #navigation_row{height: 50px; }
-#picture_outter_frame {height: 180px; width: 180px; border: 1px solid #E7E7E7 ; display: inline-block; position: relative; top: 50%; transform: translate(0,-50%); }
-#picture_inner_frame{height: 160px; width: 160px;  padding: 0}
+#picture_outter_frame {height: 180px; width: 180px; border: 1px solid #E7E7E7 ; display: inline-block; position: relative; top: 50%; transform: translate(0,-50%);
+                       padding:8px}
+#picture_inner_frame{margin: 0; height: 160px; width: 160px;  padding: 0; position: relative; top: 50%; transform: translateY(-50%);}
 #profile_pic{width:100%; height:100%;}
 #general_info{ display: inline-block;  position: absolute; top: 50%; transform: translateY(-50%);  margin-left: 30px }
 #name_info {font-size: 35px}
-.occ_spec_info{font-size: 20px; color: #0000FF;}
+#edit_profile_pencil{font-size: 30px; margin-left: 20px}
+#edit_profile_pencil:hover {cursor: pointer}
+#upload_picture_label{ display: none; position: absolute;  bottom: 0px; right: 0px;  width: 100%; padding: 5px 10px 5px 10px; font-size: 18px;
+                        color: white; background-color: black;opacity: 0.6; border-radius: 3px; text-align: center}
+#upload_picture_label:hover {cursor: pointer; opacity: 0.8}
+.picture_input {display: none}
+
+.occ_spec_info{font-size: 20px; color: rgb(0, 123, 255)}
 
 #nav_options{}
 .nav_option{font-size:20px; color: gray}
@@ -16,7 +24,7 @@
 
 .detail_row{height: 55px; border-bottom: 1px solid #E7E7E7; font-size: 18px;}
 .detail_info_name{width: 250px; display: inline-block;  position: relative; top: 50%; transform: translateY(-50%); font-weight: bold}
-.detail_info{width: 350px;  display: inline-block;   position: relative; top: 50%; transform: translateY(-50%);}
+.detail_info, .username_info{width: 350px;  display: inline-block;   position: relative; top: 50%; transform: translateY(-50%);}
 .none_info{color: rgb(190, 190, 190); width: 350px;  display: inline-block;   position: relative; top: 50%; transform: translateY(-50%);}
 
 
@@ -28,4 +36,8 @@
 #nav-password{padding-top: 15px}
 #fill_out_fields_alert, #pass_dont_match_alert, #wrong_current_password, #password_change_success, #invalid_password_messages, #loading_gif{display: none}
 #loading_gif{margin-left:10px}
+
+.user_input {display: none; width: 350px; position: relative; top: 50%; transform: translateY(-50%); border-top: none; border-left: none; border-right: none }
+#save_profile_btn{display: none;margin: 15px 10px 15px 0px}
+#cancel_profile_btn{display: none; margin-top: 15px 0px 15px 0px}
 /*position: absolute; top: 50%; right: 50%; transform: translate(50%,-50%);*/

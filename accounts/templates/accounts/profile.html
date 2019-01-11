@@ -10,12 +10,22 @@
     <div class="col-md-12 col-lg-12 col-xl-12" >
       <div id="picture_outter_frame">
         <div id="picture_inner_frame">
-          <img src="{% static 'no_image_available.png' %}" alt="" id="profile_pic">
+          {% if user.picture %}
+          <img src="{{user.picture.url}}"  alt="" id='profile_pic' >
+          {%else%}
+          <img src="{% static 'no_image_available.png' %}"  alt=""  id='profile_pic'  >
+          {% endif %}
         </div>
+        <label for="picture_input" class="rock_input" id="upload_picture_label">
+            Upload picture
+        </label>
       </div>
 
       <div id="general_info">
-        <div id="name_info">{{user.first_name}} {{user.last_name}}</div>
+        <span id="name_info">{{user.first_name}} {{user.last_name}}</span>
+        {% if own_profile %}
+        <span class="oi oi-pencil" data-toggle="tooltip" title="Edit profile" data-placement="right" id='edit_profile_pencil' onclick='edit_profile()' ></span>
+        {% endif %}
         <div>
           <span class="occ_spec_info">{{user.occupation}}</span> &nbsp; <span style="font-size:22px">/</span>&nbsp;
           <span class="occ_spec_info">{{user.specialization}}</span>
@@ -33,50 +43,90 @@
              <!-- <a class="nav-item nav-link " id="nav-activity-tab" data-toggle="tab" href="#nav-activity" role="tab" aria-controls="nav-activity" aria-selected="false">Activity</a> -->
 
              <!-- <a class="nav-item nav-link " id="nav-publications-tab" data-toggle="tab" href="#nav-publications" role="tab" aria-controls="nav-publications" aria-selected="false">Publications</a> -->
-            {% if can_change_password %}
+            {% if own_profile %}
              <a class="nav-item nav-link " id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="false">Password</a>
             {% endif %}
           </div>
         </nav>
         <div class="tab-content" id="nav-tabContent"> <!--Where the panels of the tabs are added-->
           <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
-            <div class="detail_row">
-              <span class="detail_info_name">First name:</span><span class="detail_info">{{user.first_name}}</span>
-            </div>
-            <div class="detail_row">
-              <span class="detail_info_name">Last name:</span><span class="detail_info">{{user.last_name}}</span>
-            </div>
-            <div class="detail_row">
-                <span class="detail_info_name">Username:</span><span class="detail_info">{{user.username}}</span>
-            </div>
-            <div class="detail_row">
-                <span class="detail_info_name">Email address:</span>
-                {% if user.email %}
-                  <span class="detail_info">{{user.email}}</span>
-                {% else %}
-                  <span class="none_info">None</span>
-                {% endif %}
-            </div>
-            <div class="detail_row">
-                <span class="detail_info_name">Birthday:</span><span class="detail_info" style="color: rgb(190, 190, 190); ">Unavailable for now</span>
-            </div>
-            <div class="detail_row">
-                <span class="detail_info_name">Occupation:</span>
-                {% if user.occupation %}
-                  <span class="detail_info">{{user.occupation}}</span>
-                {% else %}
-                  <span class="none_info">None</span>
-                {% endif %}
-            </div>
-            <div class="detail_row">
-              <span class="detail_info_name">Specialization:</span>
-              {% if user.specialization %}
-                <span class="detail_info">{{user.specialization}}</span>
-              {% else %}
-                <span class="none_info">None</span>
-              {% endif %}
+            <form action="{% url 'update_profile' %}" method="POST" id="profile_form" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input  type="file" name="picture" class="form-control-file  picture_input" id="picture_input" />
 
-            </div>
+              <div class="detail_row">
+                <span class="detail_info_name">First name:</span><span class="detail_info" id="first_name_data">{{user.first_name}}</span>
+                <input class='user_input' type="text" id='first_name_field' name='first_name' value='{{user.first_name}}' hide='first_name_data'>
+              </div>
+              <div class="detail_row">
+                <span class="detail_info_name">Last name:</span><span class="detail_info" id="last_name_data">{{user.last_name}}</span>
+                <input class='user_input' type="text" id='last_name_field' name='last_name' value='{{user.last_name}}' hide='last_name_data'>
+              </div>
+              <div class="detail_row">
+                  <span class="detail_info_name">Username:</span><span class="username_info">{{user.username}}</span>
+              </div>
+              <div class="detail_row">
+                  <span class="detail_info_name">Email address:</span>
+                    {% if user.email %}
+                      <span class="detail_info" id="email_data">{{user.email}}</span>
+                      <input class='user_input' type="text" id='email_field' name='email' value='{{user.email}}' hide='email_data'>
+                    {% else %}
+                      <span class="none_info" id="email_data">None</span>
+                      <input class='user_input' type="text" id='email_field' name='email'  hide='email_data'>
+                    {% endif %}
+
+              </div>
+              <div class="detail_row">
+                  <span class="detail_info_name">Birthday:</span>
+                  {% if user.birthday %}
+                  <span class="detail_info" >{{user.birthday}}</span>
+                  {% else %}
+                  <span class="detail_info"style="color: rgb(190, 190, 190); " >None</span>
+                  {% endif %}
+                  <input type="date" value="{{user.birthday|date:'Y-m-d'}}" class="form-control user_input" name="birthday">
+              </div>
+              <div class="detail_row">
+                  <span class="detail_info_name">Occupation:</span>
+                  {% if user.occupation %}
+                    <span class="detail_info" id="occupation_data">{{user.occupation}}</span>
+                  {% else %}
+                    <span class="none_info detail_info" id="occupation_data">None</span>
+                  {% endif %}
+
+                  <select name="occupation" id="occupation_field" class="user_input" hide="occupation_data" >
+                    <option value="" disabled selected>Select occupation</option>
+                    {% for occupation in occupations %}
+                      {% if occupation.id == user.occupation.id %}
+                        <option value="{{occupation.id}}" selected>{{occupation.name}} </option>
+                      {% else %}
+                        <option value="{{occupation.id}}">{{occupation.name}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="detail_row">
+                <span class="detail_info_name">Specialization:</span>
+                {% if user.specialization %}
+                  <span class="detail_info" id="specialization_data">{{user.specialization}}</span>
+                {% else %}
+                  <span class="none_info detail_info" id="specialization_data">None</span>
+                {% endif %}
+
+                <select name="specialization" id="specialization_field" class="user_input" hide="specialization_data" >
+                  <option value="" disabled selected>Select specialization</option>
+                  {% for specialization in specializations %}
+                    {% if specialization.id == user.specialization.id %}
+                      <option value="{{specialization.id}}" selected>{{specialization.name}} </option>
+                    {% else %}
+                      <option value="{{specialization.id}}">{{specialization.name}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+
+              <button  class="btn btn-primary" id="save_profile_btn" type="button" onclick="save_profile('#profile_form')">Save Changes</button>
+              <button type="button" class="btn btn-secondary" id="cancel_profile_btn" onclick="edit_profile()">Cancel</button>
+            </form>
           </div>
 
           <div class="tab-pane fade" id="nav-groups" role="tabpanel" aria-labelledby="nav-groups-tab">
@@ -103,7 +153,7 @@
           <!-- <div class="tab-pane fade" id="nav-publications" role="tabpanel" aria-labelledby="nav-publications-tab">
             <div>PUBLICATIONS</div>
           </div> -->
-          {% if can_change_password %}
+          {% if own_profile %}
             <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
               <div class="alert alert-danger" id="fill_out_fields_alert" role="alert" >Please fill out all the fields!</div>
               <div class="alert alert-danger" id="pass_dont_match_alert" role="alert" >Passwords do not match!</div>

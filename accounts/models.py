@@ -17,8 +17,8 @@ class Specialization(models.Model):
     class Meta:
         db_table='specialization'
 
-
-
+User.add_to_class('birthday', models.DateField(auto_now=False, auto_now_add=False, null=True))
+User.add_to_class('picture', models.ImageField(upload_to="media/",  null=True))
 User.add_to_class('occupation', models.ForeignKey(Occupation, db_column = 'occupation_id', on_delete = models.SET_NULL, null=True))
 User.add_to_class('specialization', models.ForeignKey(Specialization, db_column = 'specialization_id', on_delete = models.SET_NULL, null=True))
 User.add_to_class('password_changed', models.CharField(max_length=1, default ='f', null=False))

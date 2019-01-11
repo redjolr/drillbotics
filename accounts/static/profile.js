@@ -3,6 +3,8 @@ e.preventDefault()
 $(this).tab('show')
 })
 
+
+
 $( function() {
   n_allowed = 3;
 
@@ -100,6 +102,43 @@ function submit_change_pass()
       $("#loading_gif").css('display', 'none')
     }
   });
+}
 
 
+//Executed when an image is selected
+$(function() {
+   $("#picture_input").change(function (){
+     var fileName = $(this).val().split('\\').pop();
+     $("#upload_picture_label").text(fileName + " selected");
+   });
+});
+
+function edit_profile()
+{
+    if($("#save_profile_btn").css('display')=='none' )
+    {
+      $(".user_input").css('display', 'inline-block')
+      $("#save_profile_btn").css('display', 'inline')
+      $("#cancel_profile_btn").css('display', 'inline')
+      $(".detail_info").css('display', 'none')
+      $("#upload_picture_label").css('display', 'block')
+    }
+    else{
+      $(".user_input").css('display', 'none')
+      $("#save_profile_btn").css('display', 'none')
+      $("#cancel_profile_btn").css('display', 'none')
+      $(".detail_info").css('display', 'inline-block')
+      $("#upload_picture_label").css('display', 'none')
+    }
+
+}
+
+function save_profile(profile_form)
+{
+  if($('#first_name_field').val()=='' || $("#last_name_field").val()=='' )
+  {
+    alert('First name and last name must be filled!');
+    return
+  }
+  $(profile_form).submit()
 }

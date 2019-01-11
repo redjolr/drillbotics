@@ -147,7 +147,7 @@
       $('[data-toggle="tooltip"]').tooltip();
   });
   {% if update_successful %}
-    window.history.pushState("", "", '/users/'+{{existing_user.id}}); 
+    window.history.pushState("", "", '/users/'+{{existing_user.id}});
     $('#update_successful' ).animate({
       opacity: 0,
     }, 4500);

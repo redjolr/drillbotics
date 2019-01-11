@@ -78,8 +78,6 @@ def change_password(request):
     invalid_password_messages = None
 
     if request.method=='POST':
-        for i in range(10000):
-            print(" ")
 
         if request.POST['password1']=="" or request.POST['password2']=="" or request.POST['current_password']=="":
             return HttpResponse("passwords_missing")
@@ -91,12 +89,16 @@ def change_password(request):
             validate_password(request.POST["password1"], user=user)
         except ValidationError as error:
             invalid_password_messages = json.dumps(list(error))
-
         if invalid_password_messages is not None:
             return HttpResponse(invalid_password_messages)
         user.set_password(request.POST['password1'])
         user.save()
+        user = auth.authenticate(username=user.username, password=request.POST['password1'])
+        auth.login(request, user)
         return HttpResponse('success')
+
+
+
 
 def logout(request):
     if request.method == 'POST':
@@ -243,6 +245,47 @@ def adduser(request):
         specializations = Specialization.objects.all()
         return render(request, 'accounts/users/adduser.html', {'occupations': occupations, 'specializations':specializations})
 
+@login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+def profile(request, id):
+    user = User.objects.get(id=id)
+    # occupation = Occupation.objects.get(id=user.occupation.id)
+    # print(occupation)
+    groups = list( user.groups.all())
+    group_permissions = {}
+    for group in groups:
+        permissions = group.permissions.values('name')
+        group_permissions[group.name]= permissions
+    if(id==request.user.id):
+        occupations = Occupation.objects.all()
+        specializations = Specialization.objects.all()
+        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions, 'own_profile':True, 'occupations': occupations, 'specializations':specializations})
+    else:
+        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions})
+
+def update_profile(request):
+    user = request.user
+    if request.method=="POST":
+        if  request.POST["first_name"]=="" or request.POST["last_name"]=="":
+            return HttpResponse("missing_field")
+        user.first_name = request.POST["first_name"]
+        user.last_name = request.POST["last_name"]
+        if 'birthday' in request.POST:
+            user.birthday = request.POST["birthday"]
+        if 'email' in request.POST:
+            user.email = request.POST["email"]
+        if 'occupation' in request.POST:
+            user.occupation = Occupation.objects.get(id=request.POST['occupation'])
+        if 'specialization' in request.POST:
+            user.specialization = Specialization.objects.get(id=request.POST['specialization'])
+
+        if len(request.FILES)!=0:
+            print("YOYOYO")
+            user.picture = request.FILES['picture']
+        user.save()
+        return redirect("/profile/"+str(request.user.id))
+
+
 
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
@@ -312,17 +355,3 @@ def user(request, id):
 def get_groups(request):
     groups = json.dumps(list(Group.objects.values('id', 'name')))
     return HttpResponse(groups)
-
-@login_required(login_url='/login/')
-@user_passes_test(user_changed_password, login_url='/first_login_password/')
-def profile(request, id):
-    user = User.objects.get(id=id)
-    groups = list( user.groups.all())
-    group_permissions = {}
-    for group in groups:
-        permissions = group.permissions.values('name')
-        group_permissions[group.name]= permissions
-    if(id==request.user.id):
-        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions, 'can_change_password':True})
-    else:
-        return render(request, 'accounts/profile.html', {'user':user, 'group_permissions':group_permissions})
