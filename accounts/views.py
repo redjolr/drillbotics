@@ -270,7 +270,7 @@ def update_profile(request):
             return HttpResponse("missing_field")
         user.first_name = request.POST["first_name"]
         user.last_name = request.POST["last_name"]
-        if 'birthday' in request.POST:
+        if 'birthday' in request.POST  and request.POST['birthday']!='' :
             user.birthday = request.POST["birthday"]
         if 'email' in request.POST:
             user.email = request.POST["email"]
