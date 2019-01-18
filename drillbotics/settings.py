@@ -27,10 +27,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Global settings for a REST framework API
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Application definition
-
 INSTALLED_APPS = [
+    'rest_framework',
     'accounts.apps.AccountsConfig',
     'rocks.apps.RocksConfig',
     'experiments.apps.ExperimentsConfig',
