@@ -25,7 +25,7 @@
         </thead>
         <tbody>
           {% for user in users %}
-              <tr class="table_row" db_id="{{user.id}}" onclick="javascript:{window.location.replace('{% url 'user' user.id %}')}">
+              <tr class="table_row" db_id="{{user.id}}" onclick="javascript:{window.location.replace('{% url 'profile' user.id %}')}">
                 <th>{{forloop.counter}}</th>
 
                 <td>{{user.username}}</td>

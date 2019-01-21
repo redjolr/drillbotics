@@ -38,6 +38,7 @@ REST_FRAMEWORK = {
 
 # Application definition
 INSTALLED_APPS = [
+    'api',
     'rest_framework',
     'accounts.apps.AccountsConfig',
     'rocks.apps.RocksConfig',
