@@ -8,3 +8,7 @@ The login credentials for a guest user in the demo are: <br/>
 <b>Username</b>: guestuser <br/>
 <b>Password</b>: drillbotics2018 <br/>
 </p>
+
+<p>
+Note: In rare occassions, the demo may be down for maintenance. In that case, please visit later.
+</p>
