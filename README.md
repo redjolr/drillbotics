@@ -5,6 +5,6 @@ In the back end, a time series database is implemented. The preferred database t
 <p>
 If you would like to check out the application, please visit the demo: http://188.166.60.216 <br/>
 The login credentials for a guest user in the demo are: <br/>
-**Username**: guestuser <br/>
+Username: guestuser <br/>
 **Password**: drillbotics2018 <br/>
 </p>
