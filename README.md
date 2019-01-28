@@ -1,4 +1,4 @@
-# drillbotics
+# Data logging solution for an automated drilling rig
 This project is a web interface to a data logging solution for the UiS Drillbotics student research organization. 
 In the back end, a time series database is implemented. The preferred database technology is TimescaleDB.
 
