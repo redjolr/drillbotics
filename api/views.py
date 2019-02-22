@@ -16,6 +16,7 @@ import time
 
 @csrf_exempt
 def upload_chunk(request, checksum):
+    print("HAHAHAHA            AHAHAHAHAH")
     root_dir = 'media/datasets/'
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
@@ -28,6 +29,7 @@ def upload_chunk(request, checksum):
             if os.path.isdir(root_dir)==False:
                 os.mkdir(root_dir)
             if os.path.isdir(dir_path)==False:
+                print("YOOOOO")
                 os.mkdir(dir_path)
                 with open(dump_file, "w") as f:
                     f.write(request.POST['chunk'])
