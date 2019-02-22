@@ -41,7 +41,7 @@ def upload_chunk(request, checksum):
 
         if 'metadata' in request.POST:
             metadata = json.loads(request.POST["metadata"])
-            with open(meta_file, "w") as f:
+            with open(meta_file, "a") as f:
                 json.dump(metadata, f)
             return HttpResponse('METADATA_RECEIVED')
         print("HAHAHA", checksum, len(request.POST['chunk']))
