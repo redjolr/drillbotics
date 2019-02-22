@@ -24,10 +24,9 @@ def upload_chunk(request, checksum):
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
             return HttpResponse('DATASET_ALREADY_IN_DB')
-
-        if os.path.isdir(root_dir)==False:
-            os.mkdir(root_dir)
         if 'chunk' in request.POST:
+            if os.path.isdir(root_dir)==False:
+                os.mkdir(root_dir)
             if os.path.isdir(dir_path)==False:
                 os.mkdir(dir_path)
                 with open(dump_file, "w") as f:
