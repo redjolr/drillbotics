@@ -16,13 +16,11 @@ import time
 
 @csrf_exempt
 def upload_chunk(request, checksum):
-    root_dir = 'media/datasets/'
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
-        if os.path.isdir(root_dir)==False:
-            os.mkdir(root_dir)
+        if os.path.isdir()
 
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
@@ -34,7 +32,7 @@ def upload_chunk(request, checksum):
                 with open(dump_file, "w") as f:
                     f.write(request.POST['chunk'])
             else:
-                with open(dump_file, "a+") as f:
+                with open(dump_file, "a") as f:
                     f.write(request.POST['chunk'])
             return HttpResponse('CHUNK_RECEIVED')
 
