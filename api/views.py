@@ -20,7 +20,6 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
-        if os.path.isdir()
 
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
