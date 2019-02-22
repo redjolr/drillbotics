@@ -40,7 +40,7 @@ REST_FRAMEWORK = {
 INSTALLED_APPS = [
     'api',
     'rest_framework',
-    'accounts.apps.AccountsConfig',
+    'accounts',
     'rocks.apps.RocksConfig',
     'experiments.apps.ExperimentsConfig',
     'sensors.apps.SensorsConfig',
