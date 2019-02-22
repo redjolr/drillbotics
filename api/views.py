@@ -55,12 +55,9 @@ def addexperiment(request, checksum):
         with open(meta_file, "r") as f:
             experiment_meta = json.load(f)
 
-        df = pd.read_csv(dump_file)
+
         experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
 
-        df["time_micro"] = [int(x*(10**6))+experiment_start_unix for x in df["time"] ]
-        sensors_abbrs = list(df.columns.values)
-        sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
 
         rock = Rock.objects.get(id=experiment_meta['rock_id'])
 
@@ -70,18 +67,41 @@ def addexperiment(request, checksum):
 
 
         sql = '''INSERT INTO measurement(time_micro, value, depth, experiment_id, sensor_id) VALUES(%s, %s, %s, %s, %s)'''
-        chunk_size = 5000
-        df_chunks = [pd.DataFrame(df[i:i+chunk_size]) for i in range(0, len(df), chunk_size) ]
+
+
+
+
+
+
+
+
+
+
+
+        # df_chunks = [pd.DataFrame(df[i:i+chunk_size]) for i in range(0, len(df), chunk_size) ]
 
         t1 = time.time()
-        for chunk_ind, df_chunk in enumerate(df_chunks):
+        chunk_ind=0
+        chunk_size = 500
+        for df_chunk in pd.read_csv(dump_file, chunksize=chunk_size):
             print("Started chunk ", chunk_ind)
+            df_chunk["time_micro"] = [int(x*(10**6))+experiment_start_unix for x in df_chunk["time"] ]
+            sensors_abbrs = list(df_chunk.columns.values)
+            sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
             bulk_measurements = []
             for sensor, sensor_id in sensors.items():
                 for i in range(len(df_chunk)):
                     bulk_measurements.append( ( int(df_chunk['time_micro'][i+chunk_ind*chunk_size]), df_chunk[sensor][i+chunk_ind*chunk_size], 0, experiment.id, sensor_id) )
+
             with connection.cursor() as cursor:
                 cursor.executemany(sql,bulk_measurements)
+            chunk_ind+=1
+
+
+
+
+
+
         t2 = time.time()
         print("Duration: ", t2-t1)
 
