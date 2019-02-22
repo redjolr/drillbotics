@@ -16,13 +16,11 @@ import time
 
 @csrf_exempt
 def upload_chunk(request, checksum):
-    print("HAHAHAHA            AHAHAHAHAH")
     root_dir = 'media/datasets/'
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
-        print("POOOOOOOOOOOO OOOOOOOOOOOOOOST", request.POST.keys())
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
             return HttpResponse('DATASET_ALREADY_IN_DB')
@@ -32,11 +30,7 @@ def upload_chunk(request, checksum):
             print("YOOOOO")
             os.mkdir(dir_path)
         if 'chunk' in request.POST:
-            print("CHUUUUUNK")
 
-            # with open(dump_file, "w") as f:
-            #     f.write(request.POST['chunk'])
-            # else:
             with open(dump_file, "a") as f:
                 f.write(request.POST['chunk'])
             return HttpResponse('CHUNK_RECEIVED')
