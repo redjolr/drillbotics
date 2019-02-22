@@ -82,7 +82,7 @@ def addexperiment(request, checksum):
 
         t1 = time.time()
         chunk_ind=0
-        chunk_size = 500
+        chunk_size = 50
         for df_chunk in pd.read_csv(dump_file, chunksize=chunk_size):
             print("Started chunk ", chunk_ind)
             df_chunk["time_micro"] = [int(x*(10**6))+experiment_start_unix for x in df_chunk["time"] ]
