@@ -62,7 +62,6 @@ def experiment_data(request, id):
 
 
     data = Measurement.objects.values("time_micro", "value", "sensor_id", "sensor_id__name").filter(experiment_id=id, sensor_id__in=experiment_sensors).order_by('sensor_id', 'time_micro')
-    print(data.query)
     rock_set = Experiment.objects.filter(id=id).select_related('rock_id').values('rock_id', 'rock_id__name')
     rock = {'id': rock_set[0]['rock_id'], 'name':rock_set[0]['rock_id__name']}
 
