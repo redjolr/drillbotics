@@ -22,6 +22,7 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
+        print("POOOOOOOOOOOO OOOOOOOOOOOOOOST")
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
             return HttpResponse('DATASET_ALREADY_IN_DB')
