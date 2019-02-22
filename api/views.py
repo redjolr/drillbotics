@@ -26,6 +26,7 @@ def upload_chunk(request, checksum):
         if count_checksum>0:
             return HttpResponse('DATASET_ALREADY_IN_DB')
         if 'chunk' in request.POST:
+            print("CHUUUUUNK")
             if os.path.isdir(root_dir)==False:
                 os.mkdir(root_dir)
             if os.path.isdir(dir_path)==False:
