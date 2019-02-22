@@ -34,8 +34,8 @@ def upload_chunk(request, checksum):
         if 'chunk' in request.POST:
             print("CHUUUUUNK")
 
-                with open(dump_file, "w") as f:
-                    f.write(request.POST['chunk'])
+            with open(dump_file, "w") as f:
+                f.write(request.POST['chunk'])
             else:
                 with open(dump_file, "a") as f:
                     f.write(request.POST['chunk'])
