@@ -81,7 +81,7 @@
                     </div>
                   </div>
 
-                  {% for sensor in sensors.all %}
+                  {% for sensor in experiment.sensors %}
                      <div  class="dropdown-item sensor">
                        <div class='sensorLabelWrapper'><label class='sensorLabel' for='sensor{{sensor.id}}_exp{{experiment.id}}' >{{sensor.name}}</label></div>
                        <div class='checkBoxWrapper'>

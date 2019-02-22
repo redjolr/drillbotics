@@ -4,11 +4,10 @@ from django.http import HttpResponse
 from django.db import connection
 from .models import Experiment, Measurement
 from sensors.models import Sensor
-import matplotlib
 import matplotlib.pyplot as plt
-import uuid
-import json
+import uuid, json, time
 from accounts.accounts_utils import user_changed_password
+
 
 
 @login_required(login_url='/login/')
@@ -19,7 +18,7 @@ def allexperiments(request):
             	   to_char( start_time, 'HH24:MI:SS') as starting_time,
             	   (subquery.duration::text)::interval,
             	   rock.name as rock_name,
-            	   subquery.total_points/subquery.nr_of_sensors as nr_of_samples,
+            	   subquery.total_points as nr_of_samples,
             	   subquery.total_points/subquery.nr_of_sensors/subquery.duration as frequency,
             	   subquery.nr_of_sensors
             FROM experiment
@@ -33,6 +32,7 @@ def allexperiments(request):
             ) subquery ON subquery.experiment_id = experiment.id
             ORDER BY start_time DESC;
     ''')
+
     return render(request, 'experiments/allexperiments.html', {'experiments':experiments})
 
 def create_random_walk():
@@ -44,37 +44,52 @@ def create_random_walk():
 def experiment_data(request, id):
     downsample_val = float(request.GET['downsample'])   #ranges from 0 to 1
     total_points = int(request.GET['total_points'])     #total points of the experiment. Instead of accesing the database again, we get it from the client
-    sensors =request.GET['sensors'].split("_")
+    sensors = [int(sensor) for sensor in request.GET['sensors'].split("_")]
+    experiment = Experiment.objects.get(id=id)
+    experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
+    downsample_step = int(1/downsample_val)
+
+
+    with connection.cursor() as cursor:
+        cursor.execute('''
+                       SELECT sensor_id FROM measurement
+                       WHERE experiment_id=%s
+                       AND sensor_id = ANY(%s)
+                       GROUP BY sensor_id''', [id, sensors])
+
+        experiment_sensors = [sensor_id[0] for sensor_id in  cursor.fetchall() ]
 
 
 
-    data = Measurement.objects.values("time_micro", "value", "sensor_id", "sensor_id__name").filter(experiment_id=id, sensor_id__in=sensors).order_by('sensor_id', 'time_micro')
-
+    data = Measurement.objects.values("time_micro", "value", "sensor_id", "sensor_id__name").filter(experiment_id=id, sensor_id__in=experiment_sensors).order_by('sensor_id', 'time_micro')
+    print(data.query)
     rock_set = Experiment.objects.filter(id=id).select_related('rock_id').values('rock_id', 'rock_id__name')
     rock = {'id': rock_set[0]['rock_id'], 'name':rock_set[0]['rock_id__name']}
 
-    sensors_data = []
-    downsample_step = int(1/downsample_val)
+
+
 
     per_sensor_datalength = int(len(data)/len(sensors))
-    time_arr = [int(measurement['time_micro']/1000000) for measurement in data[0:per_sensor_datalength:downsample_step]]
+    time_arr = [(measurement['time_micro']-experiment_start_unix)/(10**6) for measurement in data[0:per_sensor_datalength:downsample_step]]
 
 
-    # print("YOO", data)
-    for i  in range(len(sensors)):
+    sensors_data = []
+    for i  in range(len(experiment_sensors)):
         sensor_id = data[i*per_sensor_datalength]['sensor_id']
         sensor_name = data[i*per_sensor_datalength]['sensor_id__name']
-        sensors_data.append({"sensor_name":sensor_name, "values": [measurement['value'] for measurement in data[i*per_sensor_datalength:i*per_sensor_datalength+per_sensor_datalength:downsample_step]] } )
+        unit_of_measure = Sensor.objects.get(id=sensor_id).unit_of_measure
+        sensors_data.append({"sensor_name":sensor_name, "unit_of_measure":unit_of_measure ,"values": [measurement['value'] for measurement in data[i*per_sensor_datalength:i*per_sensor_datalength+per_sensor_datalength:downsample_step]] } )
 
 
-    #matplotlib
     fig = plt.figure()
     ax = plt.subplot(111)
 
     for sensor in sensors_data:
-        ax.plot(time_arr, sensor['values'], label=sensor['sensor_name'])
-    plt.title('Legend inside')
+        ax.plot(time_arr, sensor['values'], label=sensor['sensor_name']+" ({})".format(sensor["unit_of_measure"]))
+    plt.title('Drilling experiment data')
     ax.legend()
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Measurement value")
     filename = str(uuid.uuid4())
     fig.set_size_inches(12, 7)
     ax.legend(loc='upper center', fontsize='small', ncol=6)

@@ -6,6 +6,11 @@ class Experiment(models.Model):
     start_time = models.DateTimeField()
     description = models.TextField()
     rock_id = models.ForeignKey(Rock, db_column = 'rock_id', on_delete = models.PROTECT)
+    # nr_data_points = models.IntegerField()
+    # sampling_freq = models.FloatField()
+
+    checksum = models.CharField(max_length=64,null=False, unique=True)
+
     class Meta:
         db_table = 'experiment'
 

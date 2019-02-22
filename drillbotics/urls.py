@@ -34,6 +34,6 @@ urlpatterns = [
     path('first_login_password/', accounts.views.first_login_password, name='first_login_password' ),
     path('update_profile/', accounts.views.update_profile, name='update_profile' ),
 
-    path(r'^api-auth/', include('rest_framework.urls')), 
+    path('api/', include('api.urls')), 
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
