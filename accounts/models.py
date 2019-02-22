@@ -6,6 +6,7 @@ User = get_user_model()
 
 class Occupation(models.Model):
     name = models.CharField(max_length=50)
+    random_str = models.CharField(max_length=1, null=True)
     def __str__(self):
         return self.name
     class Meta:
@@ -13,7 +14,7 @@ class Occupation(models.Model):
 
 class Specialization(models.Model):
     name = models.CharField(max_length=50)
-
+    random_str = models.CharField(max_length=1, null=True)
     def __str__(self):
         return self.name
     class Meta:
