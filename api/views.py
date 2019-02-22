@@ -21,16 +21,14 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
-        if os.path.isdir(root_dir)==False:
-            os.mkdir(root_dir)
-
-
         count_checksum = Experiment.objects.filter(checksum=checksum).count()
         if count_checksum>0:
             return HttpResponse('DATASET_ALREADY_IN_DB')
 
+        if os.path.isdir(root_dir)==False:
+            os.mkdir(root_dir)
         if 'chunk' in request.POST:
-            if os.path.exists(dir_path)==False:
+            if os.path.isdir(dir_path)==False:
                 os.mkdir(dir_path)
                 with open(dump_file, "w") as f:
                     f.write(request.POST['chunk'])
