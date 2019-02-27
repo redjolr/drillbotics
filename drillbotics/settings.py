@@ -150,6 +150,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
+CELERY_BROKER_URL = 'amqp://localhost'
+
 try:
     from .local_settings import *
 except:

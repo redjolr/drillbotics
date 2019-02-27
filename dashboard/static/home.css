@@ -42,7 +42,7 @@ html, body{height: 100%}
 .oi-circle-x {font-size: 12px}
 .oi-circle-x:hover {color: gray; }
 
-.slider{width: 90%;}
+.slider, .progress{width: 95%;}
 
 ::-webkit-scrollbar {  width: 2px;}
 

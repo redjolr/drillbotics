@@ -51,9 +51,17 @@
         <div id="collapse{{experiment.id}}" class="collapse" aria-labelledby="experiment{{experiment.id}}" data-parent="#accordion">
           <div class="card-body">
             <div>
-              <div><strong>Data points:</strong> <span id='total_points{{experiment.id}}'>{{experiment.data_count}}</span></div>
+
+              <div><strong>Total points:</strong> <span id='total_points{{experiment.id}}'>{{experiment.nr_data_points}}</span></div>
               <br>
 
+              {% if experiment.uploaded_percentage != '100%' %}
+                <div><strong>Uploading:</strong> <span id='total_points{{experiment.id}}'>{{experiment.uploaded_percentage}}</span></div>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width:{{experiment.uploaded_percentage}}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <br>
+              {% endif %}
               <strong>Downsample to:</strong>
               <div id="slider{{experiment.id}}" class="slider">
                 <div id="custom-handle{{experiment.id}}" class="ui-slider-handle"></div>

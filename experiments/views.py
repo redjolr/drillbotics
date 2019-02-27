@@ -18,14 +18,14 @@ def allexperiments(request):
             	   to_char( start_time, 'HH24:MI:SS') as starting_time,
             	   (subquery.duration::text)::interval,
             	   rock.name as rock_name,
-            	   subquery.total_points as nr_of_samples,
-            	   subquery.total_points/subquery.nr_of_sensors/subquery.duration as frequency,
+            	   nr_data_points ,
+            	   nr_data_points/subquery.nr_of_sensors/subquery.duration as frequency,
             	   subquery.nr_of_sensors
             FROM experiment
             INNER JOIN rock on experiment.rock_id = rock.id
             INNER JOIN
             (
-            	SELECT experiment_id, COUNT(*) as total_points, MAX(time_micro)/1000000 as duration,
+            	SELECT experiment_id, ( MAX(time_micro)-MIN(time_micro))/1000000 as duration,
             		   MAX(sensor_id) as nr_of_sensors
             	FROM measurement
             	GROUP BY experiment_id
