@@ -1,7 +1,7 @@
 from django.db import models
 from rocks.models import Rock
 from sensors.models import Sensor
-
+from django.contrib.postgres.fields import ArrayField
 class Experiment(models.Model):
     start_time = models.DateTimeField()
     description = models.TextField()
@@ -10,7 +10,7 @@ class Experiment(models.Model):
     uploaded_data_points = models.IntegerField(null=True, default=0)
     sampling_freq = models.FloatField(null=True)
     checksum = models.CharField(max_length=64,null=False, unique=True)
-    sensors = models.ArrayField(models.IntegerField(), null=True)
+    sensors = ArrayField(models.IntegerField(), null=True)
 
     class Meta:
         db_table = 'experiment'
