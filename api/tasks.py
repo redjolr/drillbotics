@@ -42,6 +42,7 @@ def add_experiment_to_db(checksum):
     experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
     rock = Rock.objects.get(id=experiment_meta['rock_id'])
     experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
+    experiment.sensors = [ id for id in sensors.values() ]
     experiment.save()
     sql = '''INSERT INTO measurement(time_micro, value, depth, experiment_id, sensor_id) VALUES(%s, %s, %s, %s, %s)'''
 
@@ -61,6 +62,7 @@ def add_experiment_to_db(checksum):
             cursor.executemany(sql,bulk_measurements)
             cursor.execute("UPDATE experiment SET uploaded_data_points = uploaded_data_points+%s WHERE id=%s ", [len(bulk_measurements), experiment.id])
         chunk_ind+=1
+
 
 
     t2 = time.time()
