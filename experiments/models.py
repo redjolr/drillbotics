@@ -7,10 +7,10 @@ class Experiment(models.Model):
     description = models.TextField()
     rock_id = models.ForeignKey(Rock, db_column = 'rock_id', on_delete = models.PROTECT)
     nr_data_points = models.IntegerField(null=True)
-    uploaded_data_points = models.IntegerField(null=True, default=0) 
+    uploaded_data_points = models.IntegerField(null=True, default=0)
     sampling_freq = models.FloatField(null=True)
-
     checksum = models.CharField(max_length=64,null=False, unique=True)
+    sensors = model.ArrayField(models.IntegerField(), null=True)
 
     class Meta:
         db_table = 'experiment'
