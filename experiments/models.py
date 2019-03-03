@@ -10,7 +10,7 @@ class Experiment(models.Model):
     uploaded_data_points = models.IntegerField(null=True, default=0)
     sampling_freq = models.FloatField(null=True)
     checksum = models.CharField(max_length=64,null=False, unique=True)
-    sensors = model.ArrayField(models.IntegerField(), null=True)
+    sensors = models.ArrayField(models.IntegerField(), null=True)
 
     class Meta:
         db_table = 'experiment'
