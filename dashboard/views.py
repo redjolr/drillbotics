@@ -23,7 +23,7 @@ def home(request):
             # exp['sensors'] = [{'id':sensor[0], 'name':sensor[1]} for sensor in cursor.fetchall()]
 
 
-            exp['sensors'] = [{'id':sensor_id, 'name':Sensor.objects.get(id=sensor_id).abbreviation} for sensor_id in exp['sensors']]
+            exp['sensors'] = [{'id':sensor_id, 'name':Sensor.objects.get(id=sensor_id).name} for sensor_id in exp['sensors']]
             exp['uploaded_percentage'] = "{:.0%}".format((exp['uploaded_data_points']) / exp['nr_data_points'])
             experiments.append(exp)
 
