@@ -14,17 +14,7 @@ def home(request):
     experiments = []
     with connection.cursor() as cursor:
         for exp in experiments_set:
-            #Because it is not possible to do a GROUP BY using the ORM
-            # cursor.execute('''
-            #                SELECT id, name FROM sensor INNER JOIN (
-            #                SELECT sensor_id FROM measurement
-            #                WHERE experiment_id=%s
-            #                GROUP BY sensor_id) as grouped_sensors ON sensor.id=grouped_sensors.sensor_id''', [exp['id']])
-            # exp['sensors'] = [{'id':sensor[0], 'name':sensor[1]} for sensor in cursor.fetchall()]
-
-
             exp['sensors'] = [{'id':sensor_id, 'name':Sensor.objects.get(id=sensor_id).name} for sensor_id in exp['sensors']]
             exp['uploaded_percentage'] = "{:.0%}".format((exp['uploaded_data_points']) / exp['nr_data_points'])
             experiments.append(exp)
-
     return render(request, 'dashboard/home.html', {'experiments': experiments})

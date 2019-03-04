@@ -23,8 +23,7 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
-        count_checksum = Experiment.objects.filter(checksum=checksum).count()
-        if count_checksum>0:
+        if  Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
         if os.path.isdir(root_dir)==False:
             os.mkdir(root_dir)
@@ -47,14 +46,12 @@ def upload_chunk(request, checksum):
 @csrf_exempt
 def addexperiment(request, checksum):
     if request.method=="POST":
-        count_checksum = Experiment.objects.filter(checksum=checksum).count()
-        if count_checksum>0:
+        if Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
 
         add_experiment_to_db.delay(checksum)
-        return HttpResponse('EXPERIMENT_ADDED')
-    else:
-        return HttpResponse('INVALID_HTTP_METHOD')
+        return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
+
 
 
 @csrf_exempt
