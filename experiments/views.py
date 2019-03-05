@@ -101,7 +101,7 @@ def generate_experiment(experiment_id):
 
     chunk = 0
     while True:
-        data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id).order_by('time_micro', 'sensor_id')[chunk*chunk_size:chunk*chunk_size+chunk_size]
+        data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[chunk*chunk_size:chunk*chunk_size+chunk_size]
         if len(data)==0:
             break
         row = ''
