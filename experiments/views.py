@@ -1,38 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.db import connection
 from .models import Experiment, Measurement
+from rocks.models import Rock
 from sensors.models import Sensor
 import matplotlib.pyplot as plt
 import uuid, json, time
 from accounts.accounts_utils import user_changed_password
-
+from datetime import datetime, timedelta
 
 
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def allexperiments(request):
-    experiments = Experiment.objects.raw('''
-                    SELECT experiment.id, to_char( start_time, 'DD Month YYYY') as date,
-            	   to_char( start_time, 'HH24:MI:SS') as starting_time,
-            	   (subquery.duration::text)::interval,
-            	   rock.name as rock_name,
-            	   nr_data_points ,
-            	   nr_data_points/subquery.nr_of_sensors/subquery.duration as frequency,
-            	   subquery.nr_of_sensors
-            FROM experiment
-            INNER JOIN rock on experiment.rock_id = rock.id
-            INNER JOIN
-            (
-            	SELECT experiment_id, ( MAX(time_micro)-MIN(time_micro))/1000000 as duration,
-            		   MAX(sensor_id) as nr_of_sensors
-            	FROM measurement
-            	GROUP BY experiment_id
-            ) subquery ON subquery.experiment_id = experiment.id
-            ORDER BY start_time DESC;
-    ''')
-
+    experiments = Experiment.objects.all()
+    for experiment in experiments:
+        experiment.duration = str(timedelta(seconds=experiment.duration/(10**6)))
+        experiment.uploaded = "{:.0%}".format((experiment.uploaded_data_points) / experiment.nr_data_points)
     return render(request, 'experiments/allexperiments.html', {'experiments':experiments})
 
 def create_random_walk():
@@ -98,34 +83,76 @@ def experiment_data(request, id):
 
     return HttpResponse(json.dumps({'rock': rock,'data':{'time': time_arr, 'sensors':sensors_data}, 'filename':filename}))
 
-@login_required(login_url='/login/')
-@user_passes_test(user_changed_password, login_url='/first_login_password/')
-def download_dataset(request, experiment_id):
-    response = HttpResponse()
-    sensors = list(Sensor.objects.values('abbreviation').all().order_by('id'))
-    experiment = Experiment.objects.values('start_time').filter(id=experiment_id)
-    exp_date = experiment[0]['start_time'].strftime( "%d-%B-%Y")
-    data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id).order_by('time_micro', 'sensor_id')
+
+def generate_experiment(experiment_id):
+    chunk_size=10000
+    experiment = Experiment.objects.get(id=experiment_id)
+
+
+    experiment_start_unix = int(experiment.start_time.timestamp())*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
+    print(experiment_start_unix)
+    sensors = list(Sensor.objects.filter(id__in=experiment.sensors).values('abbreviation'))
+    # data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[:10]
 
     columns = "time_micro"
     for sensor in sensors:
         columns+= ","+sensor['abbreviation']
-    response.write(columns+"\n")
-    row = ''
-    i=0
-    for measurement in data:
-        if i==0:
-            row +=str(measurement['time_micro'])+','+str(measurement['value'])
-        else:
-            row += ','+str(measurement['value'])
-        i+=1
-        if i==len(sensors):
-            response.write(row+"\n")
-            row=''
-            i=0
+    yield columns+"\r\n"
 
-    filename = "Experiment_"+exp_date+".csv"
+    chunk = 0
+    while True:
+        data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id).order_by('time_micro', 'sensor_id')[chunk*chunk_size:chunk*chunk_size+chunk_size]
+        if len(data)==0:
+            break
+        row = ''
+        i=0
+        for measurement in data:
+            if i==0:
+                row +=str((measurement['time_micro']-experiment_start_unix)/(10**6)+3600  )+','+str(measurement['value'])
+            else:
+                row += ','+str(measurement['value'])
+            i+=1
+            if i==len(sensors):
+                yield row+'\r\n'
+                row=''
+                i=0
+        chunk +=1
 
+
+@login_required(login_url='/login/')
+@user_passes_test(user_changed_password, login_url='/first_login_password/')
+def download_dataset(request, experiment_id):
+    response = StreamingHttpResponse(generate_experiment(experiment_id))
+    exp_date = Experiment.objects.values('start_time').filter(id=experiment_id)[0]['start_time'].strftime( "%d-%B-%Y")
     response['Content-Type'] = 'text/plain'
-    response['Content-Disposition'] = 'attachment; filename='+filename
+    response['Content-Disposition'] = 'attachment; filename=Experiment_'+exp_date+'.txt'
+
     return response
+
+
+
+
+    # sensors = list(Sensor.objects.values('abbreviation').all().order_by('id'))
+
+
+    # data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id).order_by('time_micro', 'sensor_id')
+    #
+    # columns = "time_micro"
+    # for sensor in sensors:
+    #     columns+= ","+sensor['abbreviation']
+    # response.write(columns+"\n")
+    # row = ''
+    # i=0
+    # for measurement in data:
+    #     if i==0:
+    #         row +=str(measurement['time_micro'])+','+str(measurement['value'])
+    #     else:
+    #         row += ','+str(measurement['value'])
+    #     i+=1
+    #     if i==len(sensors):
+    #         response.write(row+"\n")
+    #         row=''
+    #         i=0
+    #
+
+    # return response

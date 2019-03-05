@@ -9,6 +9,7 @@ class Experiment(models.Model):
     nr_data_points = models.IntegerField(null=True)
     uploaded_data_points = models.IntegerField(null=True, default=0)
     sampling_freq = models.FloatField(null=True)
+    duration = models.BigIntegerField(null=True,  default=0) #In microseconds
     checksum = models.CharField(max_length=64,null=False, unique=True)
     sensors = ArrayField(models.IntegerField(), null=True)
 

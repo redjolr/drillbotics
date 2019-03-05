@@ -14,12 +14,13 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Date</th>
+
       <th scope="col">Start time</th>
-      <th scope="col">Duration (s)</th>
+      <th scope="col">Duration</th>
       <th scope="col">Rock</th>
       <th scope="col">#Data points</th>
       <th scope="col">Sampling frequency</th>
+      <th scope="col">Uploaded</th>
 
     </tr>
   </thead>
@@ -27,13 +28,12 @@
     {% for experiment in experiments %}
     <tr>
       <th scope="row">{{forloop.counter}}</th>
-      <td>{{experiment.date}}</td>
-      <td>{{experiment.starting_time}} </td>
+      <td>{{experiment.start_time|date:"d M Y"}} </td>
       <td>{{experiment.duration}} </td>
-      <td>{{experiment.rock_name}} </td>
+      <td>{{experiment.rock_id}} </td>
       <td>{{experiment.nr_data_points}} </td>
-      <td>{{experiment.frequency}} Hz </td>
-
+      <td>{{experiment.sampling_freq}} Hz </td>
+      <td>{{experiment.uploaded}}</td>
     </tr>
     {% endfor %}
   </tbody>

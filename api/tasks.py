@@ -17,7 +17,7 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 from django.db import transaction
-import time
+import time, shutil
 
 
 @shared_task
@@ -26,14 +26,11 @@ def add_experiment_to_db(checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
 
-
-    print("Adding experiment yoo", checksum)
     with open(meta_file, "r") as f:
         experiment_meta = json.load(f)
     sensors_abbrs = list(pd.read_csv(dump_file, nrows=1).columns)
     sensors_abbrs.remove('time')
     sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
-    print("YOOOO", sensors_abbrs)
     with open(dump_file, "r") as f:
         num_lines = sum(1 for line in f) - 1
 
@@ -60,10 +57,15 @@ def add_experiment_to_db(checksum):
 
         with connection.cursor() as cursor:
             cursor.executemany(sql,bulk_measurements)
-            cursor.execute("UPDATE experiment SET uploaded_data_points = uploaded_data_points+%s WHERE id=%s ", [len(bulk_measurements), experiment.id])
+            experiment.duration = int(df_chunk['time'].tail(1).iloc[0])*(10**6)
+            experiment.uploaded_data_points = experiment.uploaded_data_points+len(bulk_measurements)
+            experiment.sampling_freq = (experiment.uploaded_data_points//len(sensors_abbrs))/ (experiment.duration//(10**6) )
+            experiment.save()
+            # cursor.execute("UPDATE experiment SET uploaded_data_points = uploaded_data_points+%s WHERE id=%s ", [len(bulk_measurements), experiment.id])
         chunk_ind+=1
 
 
 
     t2 = time.time()
+    shutil.rmtree(dir_path)
     return "Duration: {}".format(t2-t1)
