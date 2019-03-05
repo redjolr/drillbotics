@@ -100,7 +100,7 @@ def generate_experiment(experiment_id):
     yield columns+"\r\n"
 
     chunk = 0
-    interval = 10*(10**6)
+    interval = 20*(10**6)
     while True:
         data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id, time_micro__gte=chunk*interval+experiment_start_unix, time_micro__lt=chunk*interval+interval+experiment_start_unix).order_by('time_micro','sensor_id')#[chunk*chunk_size:chunk*chunk_size+chunk_size]
         if len(data)==0:
