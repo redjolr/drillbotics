@@ -55,6 +55,8 @@ def add_experiment_to_db(checksum):
             for i in range(len(df_chunk)):
                 bulk_measurements.append( ( int(df_chunk['time_micro'][i+chunk_ind*chunk_size]), df_chunk[sensor][i+chunk_ind*chunk_size], 0, experiment.id, sensor_id) )
 
+
+
         with connection.cursor() as cursor:
             cursor.executemany(sql,bulk_measurements)
             experiment.duration = int(df_chunk['time'].tail(1).iloc[0])*(10**6)

@@ -89,7 +89,7 @@ def generate_experiment(experiment_id):
     experiment = Experiment.objects.get(id=experiment_id)
 
 
-    experiment_start_unix = int(experiment.start_time.timestamp())*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
+    experiment_start_unix = int(experiment.start_time.timestamp()-3600)*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
     print(experiment_start_unix)
     sensors = list(Sensor.objects.filter(id__in=experiment.sensors).values('abbreviation'))
     # data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[:10]
@@ -100,15 +100,16 @@ def generate_experiment(experiment_id):
     yield columns+"\r\n"
 
     chunk = 0
+    interval = 10*(10**6)
     while True:
-        data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[chunk*chunk_size:chunk*chunk_size+chunk_size]
+        data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id, time_micro__gte=chunk*interval+experiment_start_unix, time_micro__lt=chunk*interval+interval+experiment_start_unix).order_by('time_micro','sensor_id')#[chunk*chunk_size:chunk*chunk_size+chunk_size]
         if len(data)==0:
             break
         row = ''
         i=0
         for measurement in data:
             if i==0:
-                row +=str((measurement['time_micro']-experiment_start_unix)/(10**6)+3600  )+','+str(measurement['value'])
+                row +=str((measurement['time_micro']-experiment_start_unix)/(10**6) )+','+str(measurement['value'])
             else:
                 row += ','+str(measurement['value'])
             i+=1
@@ -125,7 +126,7 @@ def download_dataset(request, experiment_id):
     response = StreamingHttpResponse(generate_experiment(experiment_id))
     exp_date = Experiment.objects.values('start_time').filter(id=experiment_id)[0]['start_time'].strftime( "%d-%B-%Y")
     response['Content-Type'] = 'text/plain'
-    response['Content-Disposition'] = 'attachment; filename=Experiment_'+exp_date+'.txt'
+    response['Content-Disposition'] = 'attachment; filename=Experiment_'+exp_date+'.csv'
 
     return response
 
