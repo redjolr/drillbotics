@@ -109,7 +109,7 @@ def generate_experiment(experiment_id):
         i=0
         for measurement in data:
             if i==0:
-                row +=str((measurement['time_micro']-experiment_start_unix)/(10**6) )+','+str(measurement['value'])
+                row +=str(round((measurement['time_micro']-experiment_start_unix)/(10**6),6) )+','+str(measurement['value'])
             else:
                 row += ','+str(measurement['value'])
             i+=1
