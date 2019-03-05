@@ -89,7 +89,7 @@ def generate_experiment(experiment_id):
     experiment = Experiment.objects.get(id=experiment_id)
 
 
-    experiment_start_unix = int(experiment.start_time.timestamp()-3600)*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
+    experiment_start_unix = int(experiment.start_time.timestamp())*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
     print(experiment_start_unix)
     sensors = list(Sensor.objects.filter(id__in=experiment.sensors).values('abbreviation'))
     # data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[:10]
