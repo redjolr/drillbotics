@@ -126,7 +126,7 @@ def read_file(experiment_id):
     dataset_path = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
 
-    with open("dataset_path", "r") as file:
+    with open(dataset_path, "r") as file:
         chunk = file.read(100000)
         while chunk:
             yield chunk
