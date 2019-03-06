@@ -122,7 +122,16 @@ def generate_experiment(experiment_id):
 
 def read_file(experiment_id):
     checksum = Experiment.objects.get(id=experiment_id).checksum
-    yield checksum
+    dir_path = 'media/datasets/'+checksum+"/"
+    dataset_path = dir_path+"dataset.csv"
+    meta_file = dir_path+"metadata.json"
+
+    with open("dataset_path", "r") as file:
+        chunk = file.read(100000)
+        while chunk:
+            yield chunk
+            chunk = file.read(100000)
+
 
 
 
