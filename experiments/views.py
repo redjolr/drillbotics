@@ -120,10 +120,16 @@ def generate_experiment(experiment_id):
         chunk +=1
 
 
+def read_file(experiment_id):
+    checksum = Experiment.objects.get(id=experiment_id).checksum
+    yield checksum
+
+
+
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def download_dataset(request, experiment_id):
-    response = StreamingHttpResponse(generate_experiment(experiment_id))
+    response = StreamingHttpResponse(read_file(experiment_id))
     exp_date = Experiment.objects.values('start_time').filter(id=experiment_id)[0]['start_time'].strftime( "%d-%B-%Y")
     response['Content-Type'] = 'text/plain'
     response['Content-Disposition'] = 'attachment; filename=Experiment_'+exp_date+'.csv'

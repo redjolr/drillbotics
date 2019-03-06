@@ -69,5 +69,5 @@ def add_experiment_to_db(checksum):
 
 
     t2 = time.time()
-    shutil.rmtree(dir_path)
+    # shutil.rmtree(dir_path)
     return "Duration: {}".format(t2-t1)
