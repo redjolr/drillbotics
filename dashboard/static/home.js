@@ -35,7 +35,7 @@ function load_experiment(experiment_id, experiment_date)
     }
 
     var sensor_id = $("#sensor_select"+experiment_id).val()
-    var downsample_val = $("#slider"+experiment_id).slider("value")*0.01
+    var downsample_val = $("#slider"+experiment_id).slider("value")
     var total_points = $('#total_points'+experiment_id).html()
 
     var checked_sensors = get_checked_sensors(experiment_id);
@@ -57,12 +57,21 @@ function load_experiment(experiment_id, experiment_date)
 
           var data_object = JSON.parse(data)
           generate_chart(experiment_id, data_object);
-          $('<p><strong>Data points:</strong> <span>'+data_object['data']['time'].length+'</span></p>'+
+          $('<p><strong>Data points:</strong> <span>'+data_object['n_data_points']+'</span></p>'+
             '<p><h4>Rock</h4>'+
-                '<span><strong>Id:</strong> '+data_object['rock']['id']+'</span><br>'+
+                '<span><strong>Id:</strong> '+data_object['rock']['rock_id']+'</span><br>'+
                 '<span><strong>Name:</strong> '+data_object['rock']['name']+'</span>'+
             '</p>').appendTo($('#'+htmlId+'Content .info_area').eq(0));
-            $('#loading_gif').css('display', 'none');
+
+          $('<p><h4>Experiment</h4>'+
+                '<span><strong>Duration:</strong> '+data_object['experiment']['duration']+'</span><br>'+
+                '<span><strong>Sampling frequency:</strong> '+data_object['experiment']['sampling_freq']+' Hz</span></br>'+
+                '<span><strong>Total points:</strong> '+data_object['experiment']['nr_data_points']+'</span></br></br>'+
+                '<span><strong>Description:</strong> <div>'+data_object['experiment']['description']+'</div></span>'+
+            '</p>').appendTo($('#'+htmlId+'Content .info_area').eq(0));
+
+          $('#loading_gif').css('display', 'none');
+          $('#experiment'+experiment_id).css('border-right', '2px solid #89ff89')
 
       });
 
@@ -112,6 +121,7 @@ function close_panel(experiment_id)
 
   if(isActive)
     $('#nav-tab a:first').tab('show');
+  $("#experiment"+experiment_id).css('border-right', 'none') //When a tab is open the experiment in the left has a colored border to indicate that it is active
 }
 
 function generate_chart(experiment_id, data_object)
@@ -119,57 +129,6 @@ function generate_chart(experiment_id, data_object)
 
   var htmlId = 'experiment'+experiment_id;
   $("<img src='/media/graphs/"+data_object['filename']+".png' id='myChart"+experiment_id+"' style='width:100%; height: 100%;' />").appendTo($('#'+htmlId+'Content .chart_area'));
-
-  // $('<canvas id="myChart'+experiment_id+'" width="1000px" height="600px" ></canvas>').appendTo($('#'+htmlId+'Content .chart_area'));
-  // var colors = ['blue', 'green', 'red', 'yellow', 'pink', 'purple', '#f1ca3a','black', '#7f7fff', 'brown', '#98FB98']
-  // var sensor_datasets = [];
-  //
-  // for(var i=0; i<data_object['data']['sensors'].length; i++)
-  // {
-  //   sensor_datasets.push({
-  //     label: data_object['data']['sensors'][i]['sensor_name'],
-  //     data: data_object['data']['sensors'][i]['values'],
-  //
-  //     fill: false,
-  //     borderColor: [colors[i]],
-  //     borderWidth: 1,
-  //     backgroundColor: [colors[i]]
-  //   });
-  //
-  // }
-  // var ctx = document.getElementById('myChart'+experiment_id)//.getContext('2d');
-  // var myChart = new Chart(ctx, {
-  //     type: 'line',
-  //     data: {
-  //         labels: data_object['data']["time"],
-  //         datasets: sensor_datasets
-  //     },
-  //     options: {
-  //         responsive: true,
-  //         scales: {
-  //             yAxes: [{
-  //                 ticks: {
-  //                     beginAtZero:true
-  //                 }
-  //             }],
-  //
-  //             xAxes: [{
-  //               ticks: {
-  //                   suggestedMax: 700,
-  //                   suggestedMin: 0,
-  //                   stepSize: 20
-  //               }
-  //           }]
-  //         },
-  //
-  //     }
-  // });
-  //
-  // $('#myChart'+experiment_id).width($('.chart_area').width()+"px")
-  // $('#myChart'+experiment_id).height( $('#right_pane').height()*0.9 )
-  //
-  // $('#myChart'+experiment_id).attr('width', $('.chart_area').width()+"px")
-  // $('#myChart'+experiment_id).attr('height', $('#right_pane').height()*0.9+"px" )
 
 }
 
