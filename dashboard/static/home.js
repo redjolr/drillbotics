@@ -36,6 +36,7 @@ function load_experiment(experiment_id, experiment_date)
 
     var sensor_id = $("#sensor_select"+experiment_id).val()
     var downsample_val = $("#slider"+experiment_id).slider("value")
+    alert(downsample_val)
     var total_points = $('#total_points'+experiment_id).html()
 
     var checked_sensors = get_checked_sensors(experiment_id);
