@@ -40,7 +40,7 @@
 
       <div class="card">
         <div class="card-header" data-toggle="collapse" data-target="#collapse{{experiment.id}}" aria-expanded="false" aria-controls="collapse{{experiment.id}}"
-          experiment-id= "{{experiment.id}}"  id="experiment{{experiment.id}}"  class="experiment_div" >
+          experiment-id= "{{experiment.id}}"  id="experiment{{experiment.id}}"  class="experiment_div"  >
           <h5 class="mb-0">
 
               <span>{{experiment.start_time|date:"d M Y"}}</span>
@@ -63,18 +63,12 @@
                 <br>
               {% endif %}
               <strong>Downsample to:</strong>
-              <div id="slider{{experiment.id}}" class="slider">
+              <div id="slider{{experiment.id}}" class="slider" nr_data_points="{{experiment.nr_data_points}}" nr_sensors="{{experiment.sensors|length}}">
                 <div id="custom-handle{{experiment.id}}" class="ui-slider-handle"></div>
               </div>
               <br>
 
               <strong>Sensor:</strong>
-               <!-- <select id='sensor_select{{experiment.id}}'>
-              {% for sensor in sensors.all %}
-                  <option value="{{sensor.id}}">{{sensor.name}}</option>
-              {% endfor %}
-              </select> -->
-
               <div class="dropdown show">
                 <a class="btn btn-secondary dropdown-toggle sensors-dropdown-button" href="#" role="button" id="dropdownMenu{{experiment.id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Choose Sensors
@@ -139,14 +133,17 @@
 var sliders = $('.slider')
 for(var i=0; i<sliders.length; i++)
 {
+  nr_data_points = $( ".slider" ).eq(i).attr('nr_data_points')
+  nr_sensors = $( ".slider" ).eq(i).attr('nr_sensors')
+  max_downsample_step = (nr_data_points /nr_sensors)/3
   $( function(i) {
 
     var handle = $( "#custom-handle"+sliders.eq(i).attr('id').slice(6) );
 
     $( ".slider" ).eq(i).slider({
-      value: 600,
+      value: max_downsample_step*0.6,
       min: 1,
-      max: 1000,
+      max: max_downsample_step,
       step: 1,
       create: function() {
         handle.text( $( this ).slider( "value" ) );

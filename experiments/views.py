@@ -32,9 +32,10 @@ def create_random_walk():
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def experiment_data(request, id):
     downsample_val = int(request.GET['downsample'])   #ranges from 0 to 1
-    total_points = int(request.GET['total_points'])     #total points of the experiment. Instead of accesing the database again, we get it from the client
+         #total points of the experiment. Instead of accesing the database again, we get it from the client
     sensors = [int(sensor) for sensor in request.GET['sensors'].split("_")]
     experiment = Experiment.objects.get(id=id)
+    total_points = experiment.uploaded_data_points
     experiment_values=Experiment.objects.filter(id=id).values('description', 'duration', 'nr_data_points', 'sampling_freq')[0]
     experiment_values['duration'] = str(timedelta(seconds=experiment_values['duration']/(10**6)))
 
