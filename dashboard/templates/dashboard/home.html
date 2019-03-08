@@ -136,6 +136,7 @@ for(var i=0; i<sliders.length; i++)
   nr_data_points = $( ".slider" ).eq(i).attr('nr_data_points')
   nr_sensors = $( ".slider" ).eq(i).attr('nr_sensors')
   max_downsample_step = parseInt((nr_data_points /nr_sensors)/3);
+  $(".ui-slider-handle").css("width", (max_downsample_step.toString().length*10)+"px")
   $( function(i) {
 
     var handle = $( "#custom-handle"+sliders.eq(i).attr('id').slice(6) );
@@ -162,7 +163,7 @@ $( function() {
   $( "#nav-tab" ).disableSelection();
 } );
 
-$(".ui-slider-handle").css("width", "35px")
+
 $(".ui-slider-handle").css("height", "24px")
 $(".ui-slider-handle").css("top", "50%")
 $(".ui-slider-handle").css("margin-top", "-12px")
