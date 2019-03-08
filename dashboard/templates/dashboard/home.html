@@ -136,7 +136,7 @@ for(var i=0; i<sliders.length; i++)
   nr_data_points = $( ".slider" ).eq(i).attr('nr_data_points')
   nr_sensors = $( ".slider" ).eq(i).attr('nr_sensors')
   max_downsample_step = parseInt((nr_data_points /nr_sensors)/3);
-  $(".ui-slider-handle").css("width", (max_downsample_step.toString().length*10)+"px")
+  $(".ui-slider-handle").css("width", (max_downsample_step.toString().length*8)+"px")
   $( function(i) {
 
     var handle = $( "#custom-handle"+sliders.eq(i).attr('id').slice(6) );
