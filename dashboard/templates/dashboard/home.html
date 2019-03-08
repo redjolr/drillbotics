@@ -141,7 +141,7 @@ for(var i=0; i<sliders.length; i++)
     var handle = $( "#custom-handle"+sliders.eq(i).attr('id').slice(6) );
 
     $( ".slider" ).eq(i).slider({
-      value: max_downsample_step*0.6,
+      value: parseInt(max_downsample_step*0.6),
       min: 1,
       max: max_downsample_step,
       step: 1,
