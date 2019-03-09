@@ -62,7 +62,7 @@
                 </div>
                 <br>
               {% endif %}
-              <strong>Downsample to:</strong>
+              <strong>Downsample step:</strong>
               <div id="slider{{experiment.id}}" class="slider" nr_data_points="{{experiment.nr_data_points}}" nr_sensors="{{experiment.sensors|length}}">
                 <div id="custom-handle{{experiment.id}}" class="ui-slider-handle"></div>
               </div>
@@ -142,7 +142,7 @@ for(var i=0; i<sliders.length; i++)
     var handle = $( "#custom-handle"+sliders.eq(i).attr('id').slice(6) );
 
     $( ".slider" ).eq(i).slider({
-      value: parseInt(max_downsample_step*0.6),
+      value: parseInt(max_downsample_step*0.2),
       min: 1,
       max: max_downsample_step,
       step: 1,
