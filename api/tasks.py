@@ -27,13 +27,19 @@ import time, shutil
 def add_measurements_to_db(checksum, experiment):
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
-    # meta_file = dir_path+"metadata.json"
+    meta_file = dir_path+"metadata.json"
 
 
     sensors_abbrs = list(pd.read_csv(dump_file, nrows=1).columns)
     sensors_abbrs.remove('time')
     sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
+
+
+    with open(meta_file, "r") as f:
+        experiment_meta = json.load(f)
     experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
+
+
 
 
 
