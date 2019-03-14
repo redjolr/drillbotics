@@ -74,8 +74,6 @@ def addexperiment(request, checksum):
         experiment.sensors = [ id for id in sensors.values() ]
         experiment.save()
 
-
-
         add_measurements_to_db.delay(checksum, experiment)
         return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
 
