@@ -20,11 +20,13 @@ from django.db import transaction
 import time, shutil
 
 
-@shared_task
+
 
 
 @shared_task
 def add_measurements_to_db(checksum, experiment):
+    print("YOYOOYOYOY")
+    print(checksum)
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
