@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from django.db import transaction
 import time
-from .tasks import add_experiment_to_db
+from .tasks import add_measurements_to_db
 
 
 @csrf_exempt
@@ -23,6 +23,13 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
+        if 'metadata' in request.POST:
+            experiment_meta = json.loads(request.POST["metadata"])
+            with open(meta_file, "a") as f:
+                json.dump(experiment_meta, f)
+            return HttpResponse('METADATA_RECEIVED')
+
+
         if  Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
         if os.path.isdir(root_dir)==False:
@@ -35,21 +42,41 @@ def upload_chunk(request, checksum):
                 f.write(request.POST['chunk'])
             return HttpResponse('CHUNK_RECEIVED')
 
-        if 'metadata' in request.POST:
-            metadata = json.loads(request.POST["metadata"])
-            with open(meta_file, "a") as f:
-                json.dump(metadata, f)
-            return HttpResponse('METADATA_RECEIVED')
+
 
 
 
 @csrf_exempt
 def addexperiment(request, checksum):
+    dir_path = 'media/datasets/'+checksum+"/"
+    dump_file = dir_path+"dataset.csv"
+    meta_file = dir_path+"metadata.json"
     if request.method=="POST":
         if Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
 
-        add_experiment_to_db.delay(checksum)
+
+
+
+        with open(meta_file, "r") as f:
+            experiment_meta = json.load(f)
+        sensors_abbrs = list(pd.read_csv(dump_file, nrows=1).columns)
+        sensors_abbrs.remove('time')
+        sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
+        with open(dump_file, "r") as f:
+            num_lines = sum(1 for line in f) - 1
+
+
+
+        experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
+        rock = Rock.objects.get(id=experiment_meta['rock_id'])
+        experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
+        experiment.sensors = [ id for id in sensors.values() ]
+        experiment.save()
+
+
+
+        add_measurements_to_db.delay(checksum, experiment)
         return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
 
 
