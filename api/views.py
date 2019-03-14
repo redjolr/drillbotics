@@ -75,7 +75,7 @@ def addexperiment(request, checksum):
         print("Before saviiiing")
         experiment.save()
         print("EXPERIMENT HAS BEEN SAVED")
-        add_experiment_to_db.delay(checksum, experiment)
+        add_experiment_to_db.delay(checksum)
         print("LALALALALAL")
         return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
 
