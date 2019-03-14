@@ -72,6 +72,7 @@ def addexperiment(request, checksum):
         rock = Rock.objects.get(id=experiment_meta['rock_id'])
         experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
         experiment.sensors = [ id for id in sensors.values() ]
+        print("Before saviiiing")
         experiment.save()
         print("EXPERIMENT HAS BEEN SAVED")
         add_measurements_to_db.delay(checksum, experiment)
