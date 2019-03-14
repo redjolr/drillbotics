@@ -34,16 +34,12 @@ def add_experiment_to_db(checksum):
     sensors_abbrs = list(pd.read_csv(dump_file, nrows=1).columns)
     sensors_abbrs.remove('time')
     sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
-    with open(dump_file, "r") as f:
-        num_lines = sum(1 for line in f) - 1
+    # with open(dump_file, "r") as f:
+    #     num_lines = sum(1 for line in f) - 1
 
 
 
     experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
-    rock = Rock.objects.get(id=experiment_meta['rock_id'])
-    # experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
-    # experiment.sensors = [ id for id in sensors.values() ]
-    # experiment.save()
     experiment = Experiment.objects.get(checksum=checksum)
     sql = '''INSERT INTO measurement(time_micro, value, depth, experiment_id, sensor_id) VALUES(%s, %s, %s, %s, %s)'''
 
