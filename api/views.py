@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 from django.db import transaction
 import time
-from .tasks import add_measurements_to_db
+from .tasks import add_experiment_to_db
 
 
 @csrf_exempt
@@ -75,7 +75,7 @@ def addexperiment(request, checksum):
         print("Before saviiiing")
         experiment.save()
         print("EXPERIMENT HAS BEEN SAVED")
-        add_measurements_to_db.delay(checksum, experiment)
+        add_experiment_to_db.delay(checksum, experiment)
         print("LALALALALAL")
         return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
 
