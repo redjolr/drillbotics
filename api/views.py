@@ -12,9 +12,10 @@ from django.db import connection
 import pandas as pd
 import numpy as np
 from django.db import transaction
+from django.conf import settings
 import time
 from .tasks import add_experiment_to_db
-
+from .models import APIClient
 
 @csrf_exempt
 def upload_chunk(request, checksum):
@@ -94,8 +95,21 @@ def getrocks(request):
         return HttpResponse(json.dumps(rocks))
 
 @csrf_exempt
-def getrocksandsensors(request):
+def get_initial_data(request):
     if request.method=="GET":
         sensors = [ sensor for sensor in list(Sensor.objects.values('abbreviation', 'id')) ]
         rocks = [ rock for rock in list(Rock.objects.values('name', 'id')) ]
-        return HttpResponse(json.dumps({'rocks':rocks, 'sensors':sensors}))
+        api_latest = APIClient.objects.all().order_by('-date')[0]
+        return HttpResponse(json.dumps({'rocks':rocks, 'sensors':sensors, 'api_version':api_latest.version}))
+
+
+def download_api_client(request):
+    api_latest = APIClient.objects.all().order_by('-date')[0]
+    file_path = os.path.join(settings.MEDIA_ROOT, str(api_latest.file))
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type="application/vnd.ms-excel")
+            response['Content-Disposition'] = 'inltine; filename='+os.path.basename(file_path)
+            return response
+    else:
+        return HttpResponse("ERROR! File no longer exists in the server")

@@ -7,16 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="  crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'open-iconic-master/font/css/open-iconic-bootstrap.css'  %}"  rel ="stylesheet">
-<style>
 
-</style>
 </head>
 
 <body>
@@ -28,9 +24,6 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link {% block nav_item_experiments %} {% endblock nav_item_experiments %}" href="{% url 'experiments' %}">Experiments</a>
-
-
         {% if perms.sensors.view_sensor %}
           <a class="nav-item nav-link {% block nav_item_sensors %} {% endblock nav_item_sensors %} " href="{% url 'sensors' %}">Sensors</a>
         {% else %}
@@ -42,6 +35,18 @@
         {% else %}
           <a class="disabled nav-link" href="" data-toggle="tooltip" title="You do not have permission!">Rocks</a>
         {% endif %}
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Experiments
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'experiments' %}">All experiments</a>
+              <a class="dropdown-item" href="{% url 'download_api_client' %}">Download the Data Pusher</a>
+          </div>
+        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             User management
@@ -60,15 +65,13 @@
             {% else %}
               <a class="dropdown-item disabled" href="" data-toggle="tooltip" title="You cannot view groups!" data-placement="right">Groups</a>
             {% endif %}
-
           </div>
         </li>
-
       </div>
     </div>
 
     <div class="nav navbar-nav navbar-right">
-      <!-- <a href="#account" class="nav-item nav-link">Account</a> -->
+
       <span class="nav-item nav-link" >Hello {{request.user.get_short_name}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
 
       <li class="nav-item dropdown">
@@ -81,25 +84,17 @@
           <a class="dropdown-item" href="javascript:{document.getElementById('logoutForm').submit()}">Logout</a>
           <form id='logoutForm' action="{% url 'logout' %}" method="POST">
             {% csrf_token %}
-
             <input type="hidden" />
           </form>
 
         </div>
       </li>
-
-
-
     </div>
 </nav>
 </header>
-
-
   {% block content %}
 
   {% endblock %}
-
-
 
 <footer>
 

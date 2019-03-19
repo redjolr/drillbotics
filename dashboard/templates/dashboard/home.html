@@ -3,38 +3,14 @@
 
 {% block content %}
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-
-
 <link rel="stylesheet" href="{% static 'home.css' %}">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js' type='text/javascript' ></script>
-
 <img src="{% static 'loading.gif' %}" id="loading_gif" style="display: none; width: 50px; position: fixed; z-index: 2"/>
 
 
 <div id="pane_container">
   <div id="left_pane" class="ui-widget-content pane">
-
-
-    <!-- <div class="list-group" style="height: 100%; overflow-y: scroll">
-
-      {% for experiment in experiments.all %}
-          <div experiment-id= "{{experiment.id}}"  id="experiment{{experiment.id}}"
-           ondblclick="load_experiment_data(this)" class="experiment_div list-group-item list-group-item-action">
-            <span>{{experiment.start_time}}:</span>
-            <span>{{experiment.rock_id}}</span>
-          </div>
-      {% endfor %}
-    </div> -->
-
-
-
-
-
-
-
     <div id="accordion">
       {% for experiment in experiments %}
 
@@ -157,7 +133,7 @@ for(var i=0; i<sliders.length; i++)
 }
 
 
-//Makes tabs drag-and-drop-able. You can move the tab position
+
 $( function() {
   $( "#nav-tab" ).sortable();
   $( "#nav-tab" ).disableSelection();
