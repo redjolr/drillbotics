@@ -45,8 +45,6 @@ def upload_chunk(request, checksum):
 
 
 
-
-
 @csrf_exempt
 def addexperiment(request, checksum):
     dir_path = 'media/datasets/'+checksum+"/"
@@ -55,9 +53,6 @@ def addexperiment(request, checksum):
     if request.method=="POST":
         if Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
-
-
-
 
         with open(meta_file, "r") as f:
             experiment_meta = json.load(f)
@@ -68,16 +63,13 @@ def addexperiment(request, checksum):
             num_lines = sum(1 for line in f) - 1
 
 
-
+        print("YAAAAAAAy",experiment_meta['start_time'])
         experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
         rock = Rock.objects.get(id=experiment_meta['rock_id'])
         experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
         experiment.sensors = [ id for id in sensors.values() ]
-        print("Before saviiiing")
         experiment.save()
-        print("EXPERIMENT HAS BEEN SAVED")
         add_experiment_to_db.delay(checksum)
-        print("LALALALALAL")
         return HttpResponse('EXPERIMENT_BEING_ADDED_TO_THE_DB')
 
 

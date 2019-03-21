@@ -32,22 +32,20 @@ def create_random_walk():
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def experiment_data(request, id):
     downsample_val = int(request.GET['downsample'])
-    print(downsample_val)
-         #total points of the experiment. Instead of accesing the database again, we get it from the client
     sensors = [int(sensor) for sensor in request.GET['sensors'].split("_")]
     experiment = Experiment.objects.get(id=id)
     total_points = experiment.uploaded_data_points
     experiment_values=Experiment.objects.filter(id=id).values('description', 'duration', 'nr_data_points', 'sampling_freq')[0]
     experiment_values['duration'] = str(timedelta(seconds=experiment_values['duration']/(10**6)))
 
-    experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
-
+    experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S%z')))*(10**6)
+    print("YOYOYOY", experiment_start_unix)
     experiment_sensors = experiment.sensors
     rock = Experiment.objects.filter(id=id).select_related('rock_id').values('rock_id', name=F('rock_id__name'))[0]
 
     query_time = '''
         SELECT t.time_micro
-        FROM(SELECT(measurement.time_micro-{})/1000000 AS time_micro,  row_number() OVER(ORDER BY time_micro ASC) AS row
+        FROM(SELECT(measurement.time_micro-{})::float/1000000 AS time_micro,  row_number() OVER(ORDER BY time_micro ASC) AS row
         	 FROM measurement
         	 WHERE  measurement.experiment_id ={} AND measurement.sensor_id={}) AS t
         WHERE t.row % {}=0;
@@ -75,7 +73,7 @@ def experiment_data(request, id):
             cursor.execute(query_value.format(id, sens_id, downsample_val)) #cursor.execute(query, [id, sensors])
             data = cursor.fetchall()
         ax.plot(time_arr, data, label=sensor.name+" ({})".format(sensor.unit_of_measure))
-        print(sensor.unit_of_measure)
+
 
     plt.title('Drilling experiment data')
     ax.legend()

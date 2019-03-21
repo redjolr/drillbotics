@@ -34,8 +34,6 @@ def add_experiment_to_db(checksum):
     sensors_abbrs = list(pd.read_csv(dump_file, nrows=1).columns)
     sensors_abbrs.remove('time')
     sensors = { sensor['abbreviation']:sensor['id'] for sensor in list(Sensor.objects.filter(abbreviation__in=sensors_abbrs).values('abbreviation', 'id')) }
-    # with open(dump_file, "r") as f:
-    #     num_lines = sum(1 for line in f) - 1
 
 
 
