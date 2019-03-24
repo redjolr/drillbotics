@@ -2,7 +2,8 @@ var  experiments = {};
 
 $("#pane_container").css("padding-top", $("header").height());
 $("#pane_container").width($(window).width());
-$('#left_pane').width("230px");
+$('#left_pane').width("235px");
+$('#left_pane').css('min-width', '235px');
 $('#right_pane').width($("#pane_container").width()-$("#left_pane").width());
 
 //Makes left pane resizable. jQuery UI funcitonality
@@ -54,6 +55,7 @@ function load_experiment(experiment_id, experiment_date)
 
 
     $.get(url, function(data, status){
+
 
           var data_object = JSON.parse(data)
           generate_chart(experiment_id, data_object);

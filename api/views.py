@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404, JsonResponse, HttpResponse
+from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +14,7 @@ import pandas as pd
 import numpy as np
 from django.db import transaction
 from django.conf import settings
-import time
+import time, base64
 from .tasks import add_experiment_to_db
 from .models import APIClient
 
@@ -24,6 +25,13 @@ def upload_chunk(request, checksum):
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
     if request.method=="POST":
+        auth = request.META['HTTP_AUTHORIZATION'].split()
+        username, password = base64.b64decode( auth[1]).decode("utf-8").split(':')
+        user = authenticate(username=username, password=password)
+        if user is None or user.is_active==False:
+            return HttpResponse('AUTHENTICATION_FAILED')
+
+
         if 'metadata' in request.POST:
             experiment_meta = json.loads(request.POST["metadata"])
             with open(meta_file, "a") as f:
@@ -50,7 +58,14 @@ def addexperiment(request, checksum):
     dir_path = 'media/datasets/'+checksum+"/"
     dump_file = dir_path+"dataset.csv"
     meta_file = dir_path+"metadata.json"
+
     if request.method=="POST":
+        auth = request.META['HTTP_AUTHORIZATION'].split()
+        username, password = base64.b64decode( auth[1]).decode("utf-8").split(':')
+        user = authenticate(username=username, password=password)
+        if user is None or user.is_active==False:
+            return HttpResponse('AUTHENTICATION_FAILED')
+
         if Experiment.objects.filter(checksum=checksum).exists():
             return HttpResponse('DATASET_ALREADY_IN_DB')
 
@@ -62,8 +77,6 @@ def addexperiment(request, checksum):
         with open(dump_file, "r") as f:
             num_lines = sum(1 for line in f) - 1
 
-
-        print("YAAAAAAAy",experiment_meta['start_time'])
         experiment_start_unix =   int(time.mktime(time.strptime(experiment_meta['start_time'], '%Y-%m-%d %H:%M:%S')))*(10**6)
         rock = Rock.objects.get(id=experiment_meta['rock_id'])
         experiment = Experiment(start_time = experiment_meta['start_time'], description = experiment_meta['description'], rock_id=rock, checksum=checksum, nr_data_points=num_lines*len(sensors_abbrs) )
@@ -89,6 +102,12 @@ def getrocks(request):
 @csrf_exempt
 def get_initial_data(request):
     if request.method=="GET":
+        auth = request.META['HTTP_AUTHORIZATION'].split()
+        username, password = base64.b64decode( auth[1]).decode("utf-8").split(':')
+        user = authenticate(username=username, password=password)
+        if user is None or user.is_active==False:
+            return HttpResponse('AUTHENTICATION_FAILED')
+
         sensors = [ sensor for sensor in list(Sensor.objects.values('abbreviation', 'id')) ]
         rocks = [ rock for rock in list(Rock.objects.values('name', 'id')) ]
         api_latest = APIClient.objects.all().order_by('-date')[0]

@@ -7,7 +7,7 @@ from .models import Experiment, Measurement
 from rocks.models import Rock
 from sensors.models import Sensor
 import matplotlib.pyplot as plt
-import uuid, json, time
+import uuid, json, time, os
 from accounts.accounts_utils import user_changed_password
 from datetime import datetime, timedelta
 
@@ -31,6 +31,7 @@ def create_random_walk():
 @login_required(login_url='/login/')
 @user_passes_test(user_changed_password, login_url='/first_login_password/')
 def experiment_data(request, id):
+    graphs_dir = "media/graphs/"
     downsample_val = int(request.GET['downsample'])
     sensors = [int(sensor) for sensor in request.GET['sensors'].split("_")]
     experiment = Experiment.objects.get(id=id)
@@ -39,7 +40,6 @@ def experiment_data(request, id):
     experiment_values['duration'] = str(timedelta(seconds=experiment_values['duration']/(10**6)))
 
     experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S%z')))*(10**6)
-    print("YOYOYOY", experiment_start_unix)
     experiment_sensors = experiment.sensors
     rock = Experiment.objects.filter(id=id).select_related('rock_id').values('rock_id', name=F('rock_id__name'))[0]
 
@@ -70,19 +70,22 @@ def experiment_data(request, id):
     for sens_id in sensors:
         sensor = Sensor.objects.get(id=sens_id)
         with connection.cursor() as cursor:
-            cursor.execute(query_value.format(id, sens_id, downsample_val)) #cursor.execute(query, [id, sensors])
+            cursor.execute(query_value.format(id, sens_id, downsample_val))
             data = cursor.fetchall()
         ax.plot(time_arr, data, label=sensor.name+" ({})".format(sensor.unit_of_measure))
 
+    if os.path.isdir(graphs_dir)==False:
+        os.mkdir(graphs_dir)
 
     plt.title('Drilling experiment data')
-    ax.legend()
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Measurement value")
     filename = str(uuid.uuid4())
     fig.set_size_inches(12, 7)
     ax.legend(loc='upper center', fontsize='small', ncol=6)
-    fig.savefig('media/graphs/{}.png'.format(filename), dpi=80, bbox_inches='tight')
+    fig.savefig(graphs_dir+'{}.png'.format(filename), dpi=80, bbox_inches='tight')
+    ax.legend()
+
 
     return HttpResponse(json.dumps({'rock': rock, 'filename':filename, 'n_data_points':len(time_arr)*len(sensors), 'experiment':experiment_values}))
 
@@ -96,7 +99,7 @@ def generate_experiment(experiment_id):
     experiment_start_unix = int(experiment.start_time.timestamp())*(10**6)#int(time.mktime(time.strptime(experiment.start_time, '%Y-%m-%d %H:%M:%S+00:00')))*(10**6)
     print(experiment_start_unix)
     sensors = list(Sensor.objects.filter(id__in=experiment.sensors).values('abbreviation'))
-    # data = Measurement.objects.values('time_micro', 'value', 'sensor_id').filter(experiment_id=experiment_id)[:10]
+
 
     columns = "time_micro"
     for sensor in sensors:
