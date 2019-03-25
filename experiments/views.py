@@ -39,7 +39,7 @@ def experiment_data(request, id):
     experiment_values=Experiment.objects.filter(id=id).values('description', 'duration', 'nr_data_points', 'sampling_freq')[0]
     experiment_values['duration'] = str(timedelta(seconds=experiment_values['duration']/(10**6)))
 
-    experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S%z')))*(10**6)
+    experiment_start_unix =   int(time.mktime(time.strptime(str(experiment.start_time), '%Y-%m-%d %H:%M:%S')))*(10**6)
     experiment_sensors = experiment.sensors
     rock = Experiment.objects.filter(id=id).select_related('rock_id').values('rock_id', name=F('rock_id__name'))[0]
 
