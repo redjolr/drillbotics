@@ -44,7 +44,7 @@ def add_experiment_to_db(checksum):
     t1 = time.time()
     chunk_ind=0
     chunk_size = 10000
-
+    print("YOYOYOOYss")
     for df_chunk in pd.read_csv(dump_file, chunksize=chunk_size):
         print("Started chunk ", chunk_ind)
         df_chunk["time_micro"] = [int(x*(10**6))+experiment_start_unix for x in df_chunk["time"] ]
@@ -52,8 +52,6 @@ def add_experiment_to_db(checksum):
         for sensor, sensor_id in sensors.items():
             for i in range(len(df_chunk)):
                 bulk_measurements.append( ( int(df_chunk['time_micro'][i+chunk_ind*chunk_size]), df_chunk[sensor][i+chunk_ind*chunk_size], 0, experiment.id, sensor_id) )
-
-
 
         with connection.cursor() as cursor:
             cursor.executemany(sql,bulk_measurements)
