@@ -4,7 +4,7 @@ import string
 from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 from celery import shared_task
-
+from celery.utils.log import get_task_logger
 
 
 
@@ -19,7 +19,7 @@ import numpy as np
 from django.db import transaction
 import time, shutil
 
-
+logger = get_task_logger(__name__)
 
 
 
@@ -44,9 +44,9 @@ def add_experiment_to_db(checksum):
     t1 = time.time()
     chunk_ind=0
     chunk_size = 10000
-    print("YOYOYOOYss")
+    logger.info("YOYOYOOYss")
     for df_chunk in pd.read_csv(dump_file, chunksize=chunk_size):
-        print("Started chunk ", chunk_ind)
+        logger.info("Started chunk ", chunk_ind)
         df_chunk["time_micro"] = [int(x*(10**6))+experiment_start_unix for x in df_chunk["time"] ]
         bulk_measurements = []
         for sensor, sensor_id in sensors.items():
@@ -55,10 +55,15 @@ def add_experiment_to_db(checksum):
 
         with connection.cursor() as cursor:
             cursor.executemany(sql,bulk_measurements)
+            logger.info("Many executed")
             experiment.duration = int(df_chunk['time'].tail(1).iloc[0])*(10**6)
+            logger.info("duration")
             experiment.uploaded_data_points = experiment.uploaded_data_points+len(bulk_measurements)
+            logger.info("uploaded_data_points")
             experiment.sampling_freq = (experiment.uploaded_data_points//len(sensors_abbrs))/ (experiment.duration//(10**6) )
+            logger.info("sampling_freq")
             experiment.save()
+            logger.info("Saved")
             # cursor.execute("UPDATE experiment SET uploaded_data_points = uploaded_data_points+%s WHERE id=%s ", [len(bulk_measurements), experiment.id])
         chunk_ind+=1
 
